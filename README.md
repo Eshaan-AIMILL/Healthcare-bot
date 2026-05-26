@@ -211,11 +211,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📝 License
 
 This project is open source and available under the MIT License.
-
-## 📧 Support
-
-For questions or issues, please open an issue on the [GitHub repository](https://github.com/Eshaan-AIMILL/Healthcare-bot).
-
----
-
-**Happy coding! 🚀**
