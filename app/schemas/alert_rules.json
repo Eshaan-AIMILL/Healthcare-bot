@@ -10,7 +10,7 @@
 
   "billing": {
     "enabled": true,
-    "recipients": ["billing-manager@hospital.local", "cfo@hospital.local"],
+    "recipients": ["billing-manager@hospital.local", "cfo@hospital.local", "eshaanmisra12@gmail.com"],
     "rules": [
       {
         "rule_id": "BILL_001",
@@ -37,7 +37,7 @@
 
   "compliance": {
     "enabled": true,
-    "recipients": ["compliance-officer@hospital.local", "cco@hospital.local"],
+    "recipients": ["compliance-officer@hospital.local", "cco@hospital.local", "eshaanmisra12@gmail.com"],
     "rules": [
       {
         "rule_id": "COMP_001",
@@ -64,7 +64,7 @@
 
   "pharmacy": {
     "enabled": true,
-    "recipients": ["pharmacy-manager@hospital.local", "supply-chain@hospital.local"],
+    "recipients": ["pharmacy-manager@hospital.local", "supply-chain@hospital.local", "eshaanmisra12@gmail.com"],
     "rules": [
       {
         "rule_id": "PHAR_001",
@@ -101,7 +101,7 @@
 
   "patient": {
     "enabled": true,
-    "recipients": ["patient-experience@hospital.local", "operations-manager@hospital.local"],
+    "recipients": ["patient-experience@hospital.local", "operations-manager@hospital.local", "eshaanmisra12@gmail.com"],
     "rules": [
       {
         "rule_id": "PAT_001",
@@ -128,7 +128,7 @@
 
   "dispatch": {
     "enabled": true,
-    "recipients": ["logistics-manager@hospital.local", "operations-manager@hospital.local"],
+    "recipients": ["logistics-manager@hospital.local", "operations-manager@hospital.local", "eshaanmisra12@gmail.com"],
     "rules": [
       {
         "rule_id": "DISP_001",

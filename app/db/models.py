@@ -239,3 +239,16 @@ class DeliveryRecord(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     vehicle = relationship("Vehicle", back_populates="deliveries")
+
+# ── Security / RBAC ───────────────────────────────────────────────────────────
+
+class AuditLog(Base):
+    __tablename__ = "audit_logs"
+    
+    log_id = Column(Integer, primary_key=True, autoincrement=True)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    role = Column(String(20), nullable=False)
+    action = Column(String(50), nullable=False)
+    target_resource = Column(String(100))
+    query_text = Column(Text)
+    status = Column(String(20)) # Success | Blocked | Error

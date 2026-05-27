@@ -1,10 +1,3 @@
-"""
-Dispatch Engine Tests — Production Logic
-Tests all 6 production-grade dispatch engine functions.
-These tests are pure unit tests — no Ollama, no DB needed.
-
-Run: pytest tests/test_dispatch_engine.py -v
-"""
 from datetime import datetime, timedelta
 import pytest
 
@@ -23,7 +16,6 @@ from app.agents.dispatch_engine import (
 )
 
 
-# ── 1. Vehicle Compatibility ──────────────────────────────────────────────────
 
 class TestVehicleCompatibility:
 
@@ -67,7 +59,6 @@ class TestVehicleCompatibility:
                 )
 
 
-# ── 2. Traffic Factor ─────────────────────────────────────────────────────────
 
 class TestTrafficFactor:
 
@@ -100,7 +91,6 @@ class TestTrafficFactor:
             assert 0.5 < f < 3.0, f"Unexpected factor {f} for hour {hour}"
 
 
-# ── 3. Adjusted ETA ───────────────────────────────────────────────────────────
 
 class TestAdjustedETA:
 
@@ -119,7 +109,6 @@ class TestAdjustedETA:
         assert isinstance(eta, int)
 
 
-# ── 4. Predictive SLA Breach ──────────────────────────────────────────────────
 
 class TestSLAPrediction:
 
@@ -178,7 +167,6 @@ class TestSLAPrediction:
             assert arrival > datetime.now() - timedelta(seconds=5)
 
 
-# ── 5. Driver Fatigue ─────────────────────────────────────────────────────────
 
 class TestDriverFatigue:
 
@@ -202,7 +190,6 @@ class TestDriverFatigue:
         assert r["fatigued"] is True
 
 
-# ── 6. Multi-Stop Sequencer ───────────────────────────────────────────────────
 
 class TestMultiStopSequencer:
 

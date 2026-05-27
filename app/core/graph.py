@@ -34,6 +34,8 @@ def build_graph() -> StateGraph:
             "pharmacy": "pharmacy",
             "patient": "patient",
             "dispatch": "dispatch",
+            "unauthorized": "summarizer",
+            "general": "summarizer",
         },
     )
 

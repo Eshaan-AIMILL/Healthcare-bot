@@ -27,6 +27,7 @@ class ChatRequest(BaseModel):
     model: str = "healthcare-bot"
     messages: list[ChatMessage]
     stream: bool = False
+    role: str = "guest"  # admin | reception | guest
 
 
 class ChatChoice(BaseModel):
@@ -112,6 +113,7 @@ async def chat_completions(request: ChatRequest) -> ChatResponse:
 
     initial_state = AgentState(
         query=latest_query,
+        role=request.role,
         messages=conversation_history,
     )
 

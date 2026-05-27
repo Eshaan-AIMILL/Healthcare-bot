@@ -8,7 +8,38 @@
     <link
         href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap"
         rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* ── CHARTS & SEARCH ── */
+        .chart-container {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .search-bar {
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            color: var(--bright);
+            border-radius: 5px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-family: var(--font-sans);
+            width: 200px;
+            outline: none;
+            transition: border-color .15s;
+        }
+
+        .search-bar:focus {
+            border-color: var(--cyan);
+        }
         :root {
             --bg: #080c10;
             --surface: #0d1117;
@@ -536,8 +567,10 @@
         <!-- ══ BILLING ══ -->
         <div class="panel active" id="panel-billing">
             <div class="stat-row" id="billing-stats"></div>
+            <div class="chart-container"><canvas id="chart-billing"></canvas></div>
             <div class="toolbar">
                 <div class="toolbar-title">Claim Queue</div>
+                <input type="text" class="search-bar" id="search-billing" placeholder="Search claims..." onkeyup="filterTable('billing')" />
                 <select id="billing-status" onchange="loadBilling()">
                     <option value="all">All Status</option>
                     <option value="Rejected">Rejected</option>
@@ -585,8 +618,10 @@
         <!-- ══ COMPLIANCE ══ -->
         <div class="panel" id="panel-compliance">
             <div class="stat-row" id="compliance-stats"></div>
+            <div class="chart-container"><canvas id="chart-compliance"></canvas></div>
             <div class="toolbar">
                 <div class="toolbar-title">Audit Findings</div>
+                <input type="text" class="search-bar" id="search-compliance" placeholder="Search findings..." onkeyup="filterTable('compliance')" />
                 <select id="compliance-severity" onchange="loadCompliance()">
                     <option value="all">All Severity</option>
                     <option value="Critical">Critical</option>
@@ -638,8 +673,10 @@
         <!-- ══ PHARMACY ══ -->
         <div class="panel" id="panel-pharmacy">
             <div class="stat-row" id="pharmacy-stats"></div>
+            <div class="chart-container"><canvas id="chart-pharmacy"></canvas></div>
             <div class="toolbar">
                 <div class="toolbar-title">Expiry Alerts</div>
+                <input type="text" class="search-bar" id="search-pharmacy" placeholder="Search drugs..." onkeyup="filterTable('pharmacy')" />
                 <select id="pharmacy-window" onchange="loadPharmacy()">
                     <option value="30">Alert window: 30 days</option>
                     <option value="60" selected>Alert window: 60 days</option>
@@ -699,8 +736,10 @@
         <!-- ══ PATIENT ══ -->
         <div class="panel" id="panel-patient">
             <div class="stat-row" id="patient-stats"></div>
+            <div class="chart-container"><canvas id="chart-patient"></canvas></div>
             <div class="toolbar">
                 <div class="toolbar-title">Complaint Queue</div>
+                <input type="text" class="search-bar" id="search-patient" placeholder="Search complaints..." onkeyup="filterTable('patient')" />
                 <select id="patient-breach" onchange="loadPatient()">
                     <option value="false">All Complaints</option>
                     <option value="true">SLA Breached Only</option>
@@ -747,8 +786,10 @@
         <!-- ══ DISPATCH ══ -->
         <div class="panel" id="panel-dispatch">
             <div class="stat-row" id="dispatch-stats"></div>
+            <div class="chart-container"><canvas id="chart-dispatch"></canvas></div>
             <div class="toolbar">
                 <div class="toolbar-title">Active Routes & Deliveries</div>
+                <input type="text" class="search-bar" id="search-dispatch" placeholder="Search deliveries..." onkeyup="filterTable('dispatch')" />
                 <select id="dispatch-risk" onchange="loadDispatch()">
                     <option value="false">All Deliveries</option>
                     <option value="true">SLA Risk Only</option>
@@ -863,6 +904,58 @@
             }
         }
 
+        // ── Client-side Search ───────────────────────────────────────────────────────
+        function filterTable(domain) {
+            const input = document.getElementById('search-' + domain);
+            if (!input) return;
+            const filter = input.value.toLowerCase();
+            const panel = document.getElementById('panel-' + domain);
+            const tbodys = panel.querySelectorAll('tbody');
+            
+            tbodys.forEach(tbody => {
+                const rows = tbody.getElementsByTagName('tr');
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    // Skip if it's the loading/empty row
+                    if (row.cells.length === 1 && row.cells[0].colSpan > 1) continue;
+                    
+                    const textContent = row.textContent || row.innerText;
+                    if (textContent.toLowerCase().indexOf(filter) > -1) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // ── Charts ───────────────────────────────────────────────────────────────────
+        const charts = {};
+
+        function renderChart(id, type, data, options) {
+            const ctx = document.getElementById(id);
+            if (!ctx) return;
+            if (charts[id]) charts[id].destroy();
+            
+            // Set global defaults for dark mode
+            if (Chart) {
+                Chart.defaults.color = '#c9d1d9';
+                Chart.defaults.font.family = "'IBM Plex Sans', sans-serif";
+            }
+            
+            charts[id] = new Chart(ctx, {
+                type: type,
+                data: data,
+                options: Object.assign({
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#c9d1d9' } }
+                    }
+                }, options)
+            });
+        }
+
         // ── Stats row renderer ───────────────────────────────────────────────────────
         function renderStats(containerId, cards) {
             document.getElementById(containerId).innerHTML = cards.map(c =>
@@ -890,6 +983,20 @@
                 { label: 'Pending Review', value: fmt(s.pending), color: 'purple', sub: 'awaiting decision' },
                 { label: 'Avg Claim (₹)', value: fmt(s.avg_claim_amount), color: 'green', sub: 'per claim' },
             ]);
+
+            // Render Chart
+            const statusCounts = { Approved: 0, Pending: 0, Rejected: 0, UnderReview: 0 };
+            data.claims.forEach(c => {
+                if(statusCounts[c.claim_status] !== undefined) statusCounts[c.claim_status]++;
+            });
+            renderChart('chart-billing', 'doughnut', {
+                labels: ['Approved', 'Pending', 'Rejected', 'Under Review'],
+                datasets: [{
+                    data: [statusCounts.Approved, statusCounts.Pending, statusCounts.Rejected, statusCounts.UnderReview],
+                    backgroundColor: ['#3fb950', '#bc8cff', '#f85149', '#e3b341'],
+                    borderWidth: 0
+                }]
+            }, { plugins: { legend: { position: 'right' } } });
 
             document.getElementById('billing-body').innerHTML = data.claims.map(r => `
     <tr>
@@ -923,6 +1030,27 @@
                 { label: 'Resolved', value: fmt(s.resolved), color: 'green', sub: 'closed' },
             ]);
 
+            // Render Chart
+            const sevCounts = { Critical: 0, Major: 0, Minor: 0 };
+            data.findings.forEach(f => {
+                if(sevCounts[f.severity] !== undefined) sevCounts[f.severity]++;
+            });
+            renderChart('chart-compliance', 'bar', {
+                labels: ['Critical', 'Major', 'Minor'],
+                datasets: [{
+                    label: 'Findings by Severity',
+                    data: [sevCounts.Critical, sevCounts.Major, sevCounts.Minor],
+                    backgroundColor: ['#f85149', '#e3b341', '#00b4d8'],
+                    borderRadius: 4
+                }]
+            }, { 
+                scales: { 
+                    y: { beginAtZero: true, grid: { color: '#243447' }, ticks: { precision: 0 } }, 
+                    x: { grid: { display: false } } 
+                },
+                plugins: { legend: { display: false } }
+            });
+
             document.getElementById('compliance-body').innerHTML = data.findings.map(r => `
     <tr>
       <td class="code">${r.finding_id}</td>
@@ -950,6 +1078,25 @@
                 { label: 'Expiring ≤30 Days', value: fmt(s.expiring_30d), color: 'amber', sub: 'critical window' },
                 { label: 'Below Threshold', value: fmt(s.below_threshold), color: 'purple', sub: 'need reorder' },
             ]);
+
+            // Render Chart (Value at Risk vs Drug Name for top 5 expiring)
+            const topExpiring = data.expiry_alerts.slice(0, 5);
+            renderChart('chart-pharmacy', 'bar', {
+                labels: topExpiring.map(a => a.drug_name),
+                datasets: [{
+                    label: 'Value at Risk (₹)',
+                    data: topExpiring.map(a => a.stock_value_at_risk),
+                    backgroundColor: '#e3b341',
+                    borderRadius: 4
+                }]
+            }, { 
+                indexAxis: 'y', 
+                scales: { 
+                    x: { beginAtZero: true, grid: { color: '#243447' } }, 
+                    y: { grid: { display: false } } 
+                },
+                plugins: { legend: { display: false } }
+            });
 
             document.getElementById('pharmacy-expiry-body').innerHTML = data.expiry_alerts.map(r => `
     <tr>
@@ -997,6 +1144,16 @@
                 { label: 'Auto Resolved', value: fmt(s.auto_resolved), color: 'green', sub: 'system resolved' },
             ]);
 
+            // Render Chart
+            renderChart('chart-patient', 'pie', {
+                labels: ['SLA Compliant', 'SLA Breached'],
+                datasets: [{
+                    data: [s.total_complaints - s.sla_breached, s.sla_breached],
+                    backgroundColor: ['#3fb950', '#f85149'],
+                    borderWidth: 0
+                }]
+            }, { plugins: { legend: { position: 'right' } } });
+
             document.getElementById('patient-body').innerHTML = data.complaints.map(r => `
     <tr>
       <td class="code">${r.complaint_id}</td>
@@ -1035,6 +1192,16 @@
                 { label: 'Emergency', value: fmt(s.emergency), color: 'purple', sub: 'high-priority dispatches' },
                 { label: 'On-Time Rate', value: onTimeRate + '%', color: 'green', sub: 'delivered within SLA' },
             ]);
+
+            // Render Chart
+            renderChart('chart-dispatch', 'doughnut', {
+                labels: ['On Time', 'Delayed', 'SLA Breached'],
+                datasets: [{
+                    data: [s.on_time_delivered, s.delayed, s.sla_breached],
+                    backgroundColor: ['#3fb950', '#e3b341', '#f85149'],
+                    borderWidth: 0
+                }]
+            }, { plugins: { legend: { position: 'right' } } });
 
             document.getElementById('dispatch-body').innerHTML = data.routes.map(r => `
     <tr>

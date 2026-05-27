@@ -6,8 +6,7 @@ from typing import Any
 class AgentState:
 
     query: str = ""
-
-    # Planner decision: which domain agent to invoke
+    role: str = "guest"
     intent: str = "" 
 
     # Confidence

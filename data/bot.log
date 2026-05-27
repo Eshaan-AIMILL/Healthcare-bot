@@ -607,3 +607,383 @@
 2026-05-27 15:20:31 | INFO     | app.agents.patient:patient_node:70 — Patient agent completed. sla_breached=None
 2026-05-27 15:21:14 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1542 char response.
 2026-05-27 15:21:15 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 15:35:27 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 15:35:57 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 15:35:57 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 16 Critical compliance violation(s) unresolved
+2026-05-27 15:35:57 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 16 Critical compliance violation(s) unresolved → ['compliance-officer@hospital.local', 'cco@hospital.local']
+2026-05-27 15:35:57 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk
+2026-05-27 15:35:57 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 15:35:57 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 87 drug items below reorder threshold
+2026-05-27 15:35:57 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 87 drug items below reorder threshold → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 15:35:57 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 200 expired drug batches still in active inventory
+2026-05-27 15:35:57 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 200 expired drug batches still in active inventory → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 15:35:57 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 49 unresolved patient complaints in queue
+2026-05-27 15:35:57 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 49 unresolved patient complaints in queue → ['patient-experience@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 15:35:57 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 93 Emergency medical delivery/deliveries delayed
+2026-05-27 15:35:57 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 93 Emergency medical delivery/deliveries delayed → ['logistics-manager@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 15:35:57 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 6 alert(s) fired across 5 domains
+2026-05-27 15:35:57 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 6 alert(s) fired
+2026-05-27 17:45:03 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 17:45:07 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Show ICU occupancy across all hospitals for the last 72 hours'
+2026-05-27 17:45:21 | ERROR    | app.api.chat:chat_completions:124 — Graph execution failed: llama runner process has terminated: CUDA error: shared object initialization failed
+CUDA error
+2026-05-27 17:45:21 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 17:45:33 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 17:45:33 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 16 Critical compliance violation(s) unresolved
+2026-05-27 17:45:33 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 16 Critical compliance violation(s) unresolved → ['compliance-officer@hospital.local', 'cco@hospital.local']
+2026-05-27 17:45:33 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk
+2026-05-27 17:45:33 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 17:45:33 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 87 drug items below reorder threshold
+2026-05-27 17:45:33 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 87 drug items below reorder threshold → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 17:45:33 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 200 expired drug batches still in active inventory
+2026-05-27 17:45:33 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 200 expired drug batches still in active inventory → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 17:45:33 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 49 unresolved patient complaints in queue
+2026-05-27 17:45:33 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 49 unresolved patient complaints in queue → ['patient-experience@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 17:45:33 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 93 Emergency medical delivery/deliveries delayed
+2026-05-27 17:45:33 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 93 Emergency medical delivery/deliveries delayed → ['logistics-manager@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 17:45:33 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 6 alert(s) fired across 5 domains
+2026-05-27 17:45:33 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 6 alert(s) fired
+2026-05-27 17:47:28 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'For all ICU patients, verify billing clearance, medicine availability, and discharge readiness.'
+2026-05-27 17:47:41 | ERROR    | app.api.chat:chat_completions:124 — Graph execution failed: llama runner process has terminated: CUDA error: shared object initialization failed
+CUDA error
+2026-05-27 17:47:41 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 17:48:28 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'I have a board meeting in 2 hours. Give me the 5 most important numbers I need to know about our hospital operations today.'
+2026-05-27 17:48:43 | ERROR    | app.api.chat:chat_completions:124 — Graph execution failed: llama runner process has terminated: CUDA error: shared object initialization failed
+CUDA error
+2026-05-27 17:48:43 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 17:49:55 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'I have a board meeting in 2 hours. Give me the 5 most important numbers I need to know about our hospital operations today.'
+2026-05-27 17:50:17 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='patient' confidence=0.80
+2026-05-27 17:50:43 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT COUNT(*) as total_rejected_claims, SUM(claim_amount) as pending_revenue, COUNT(*) as coding_error_volume, AVG(wait_time_minutes) as avg_wait_time, COUNT(*) as on_time_deliveries FROM billing_claims WHERE claim_status = 'Pending' OR has_coding_error = 1 OR appointment_status = 'Completed' AND DATE('now', '-2 hours') <= scheduled_datetime" | params=[] | This query retrieves the total number of rejected claims, pending revenue, coding error volume, average wait time for appointments, and on-time delivery rate within the last 2 hours.
+2026-05-27 17:50:43 | ERROR    | app.tools.text2sql:run_text2sql:168 — Text2SQL execution failed: (sqlite3.OperationalError) no such column: wait_time_minutes
+[SQL: SELECT COUNT(*) as total_rejected_claims, SUM(claim_amount) as pending_revenue, COUNT(*) as coding_error_volume, AVG(wait_time_minutes) as avg_wait_time, COUNT(*) as on_time_deliveries FROM billing_claims WHERE claim_status = 'Pending' OR has_coding_error = 1 OR appointment_status = 'Completed' AND DATE('now', '-2 hours') <= scheduled_datetime]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 17:50:46 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 4 chunks for domain='patient' (distances: [0.393, 0.396, 0.406, 0.414])
+2026-05-27 17:51:04 | INFO     | app.agents.patient:patient_node:70 — Patient agent completed. sla_breached=None
+2026-05-27 17:51:24 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1092 char response.
+2026-05-27 17:51:25 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 17:55:30 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'If our hospital was audited by JCI and HIPAA regulators simultaneously tomorrow morning, what would they find and how bad would it be?'
+2026-05-27 17:55:40 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='compliance' confidence=0.90
+2026-05-27 17:56:05 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT af.*, cp.process_type, cp.staff_name, r.regulation_body FROM audit_findings af JOIN clinical_processes cp ON af.process_id = cp.process_id JOIN patients p ON cp.department = p.address WHERE af.audit_date >= ? AND af.resolution_status = 'Open' GROUP BY regulation_body" | params=['2023-03-09'] | This query will identify all open audit findings from JCI and HIPAA regulators on the day of the hypothetical audit, grouped by regulatory body.
+2026-05-27 17:56:05 | ERROR    | app.tools.text2sql:run_text2sql:168 — Text2SQL execution failed: List argument must consist only of tuples or dictionaries
+2026-05-27 17:56:08 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 5 chunks for domain='compliance' (distances: [0.383, 0.41, 0.427, 0.439, 0.452])
+2026-05-27 17:57:15 | INFO     | app.agents.compliance:compliance_node:73 — Compliance agent completed. severity=Critical|Major|Minor|None
+2026-05-27 18:07:01 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 18:07:21 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'If our hospital was audited by JCI and HIPAA regulators simultaneously tomorrow morning, what would they find and how bad would it be?'
+2026-05-27 18:07:31 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 18:07:31 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 16 Critical compliance violation(s) unresolved
+2026-05-27 18:07:31 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 16 Critical compliance violation(s) unresolved → ['compliance-officer@hospital.local', 'cco@hospital.local']
+2026-05-27 18:07:31 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk
+2026-05-27 18:07:31 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 18:07:31 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 87 drug items below reorder threshold
+2026-05-27 18:07:31 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 87 drug items below reorder threshold → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 18:07:31 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 200 expired drug batches still in active inventory
+2026-05-27 18:07:31 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 200 expired drug batches still in active inventory → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 18:07:31 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 49 unresolved patient complaints in queue
+2026-05-27 18:07:31 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 49 unresolved patient complaints in queue → ['patient-experience@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 18:07:31 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 93 Emergency medical delivery/deliveries delayed
+2026-05-27 18:07:31 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 93 Emergency medical delivery/deliveries delayed → ['logistics-manager@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 18:07:31 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 6 alert(s) fired across 5 domains
+2026-05-27 18:07:31 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 6 alert(s) fired
+2026-05-27 18:07:40 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='compliance' confidence=0.90
+2026-05-27 18:08:01 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT af.*, cp.process_type, cp.staff_name, r.regulation_body FROM audit_findings af JOIN clinical_processes cp ON af.process_id = cp.process_id JOIN patients p ON cp.department = p.address WHERE af.audit_date >= ? AND af.resolution_status = 'Open' GROUP BY regulation_body" | params=['2023-03-09'] | This query will identify all open audit findings from JCI and HIPAA regulators on the day of the hypothetical audit, grouped by regulatory body.
+2026-05-27 18:08:01 | ERROR    | app.tools.text2sql:run_text2sql:168 — Text2SQL execution failed: List argument must consist only of tuples or dictionaries
+2026-05-27 18:08:03 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 5 chunks for domain='compliance' (distances: [0.383, 0.41, 0.427, 0.439, 0.452])
+2026-05-27 18:08:18 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'What is our claim rejection rate this month broken down by payer, and which payer has the worst performance?'
+2026-05-27 18:09:08 | INFO     | app.agents.compliance:compliance_node:73 — Compliance agent completed. severity=Critical|Major|Minor|None
+2026-05-27 18:09:13 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='billing' confidence=0.90
+2026-05-27 18:09:35 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1186 char response.
+2026-05-27 18:09:35 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 18:09:55 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT payer_name, COUNT(*) AS total_claims, SUM(CASE WHEN claim_status = 'Rejected' THEN 1 ELSE 0 END) AS rejected_claims FROM billing_claims WHERE DATE(claim_date) >= DATE('now', '-30 days') GROUP BY payer_name ORDER BY rejected_claims DESC LIMIT 50" | params=[] | This query calculates the claim rejection rate for each payer over the last month and orders them by the number of rejected claims in descending order.
+2026-05-27 18:09:55 | INFO     | app.tools.text2sql:run_text2sql:161 — Text2SQL returned 8 rows for: 'What is our claim rejection rate this month broken down by payer, and which payer has the worst performance?'
+2026-05-27 18:09:56 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 5 chunks for domain='billing' (distances: [0.305, 0.371, 0.41, 0.457, 0.522])
+2026-05-27 18:10:16 | INFO     | app.agents.billing:billing_node:91 — Billing agent completed. rejection_risk=None
+2026-05-27 18:10:37 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1000 char response.
+2026-05-27 18:10:37 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 18:11:46 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Which ICD-10 rejection drivers have the highest financial impact?'
+2026-05-27 18:11:52 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='billing' confidence=0.90
+2026-05-27 18:12:08 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT error_type, SUM(claim_amount) AS total_rejected FROM billing_claims WHERE claim_status = 'Rejected' GROUP BY error_type ORDER BY total_rejected DESC LIMIT 50" | params=[] | This query identifies the ICD-10 rejection drivers with the highest financial impact by summing up the rejected claims for each driver and ordering them in descending order.
+2026-05-27 18:12:08 | INFO     | app.tools.text2sql:run_text2sql:161 — Text2SQL returned 5 rows for: 'Which ICD-10 rejection drivers have the highest financial impact?'
+2026-05-27 18:12:11 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 5 chunks for domain='billing' (distances: [0.361, 0.387, 0.454, 0.497, 0.508])
+2026-05-27 18:12:58 | INFO     | app.agents.billing:billing_node:91 — Billing agent completed. rejection_risk=None
+2026-05-27 18:13:22 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 949 char response.
+2026-05-27 18:13:22 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 18:14:07 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Which records are still open or unresolved?'
+2026-05-27 18:14:12 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='compliance' confidence=0.80
+2026-05-27 18:14:22 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT * FROM audit_findings WHERE resolution_status = 'Open' OR resolution_status IS NULL" | params=[] | This query retrieves all audit findings with an open or unresolved status.
+2026-05-27 18:14:22 | INFO     | app.tools.text2sql:run_text2sql:161 — Text2SQL returned 91 rows for: 'Which records are still open or unresolved?'
+2026-05-27 18:14:22 | INFO     | app.agents.compliance:compliance_node:28 — Compliance agent completed deterministic findings analysis.
+2026-05-27 18:14:22 | INFO     | app.agents.summarizer:summarizer_node:503 — Summarizer produced 983 char deterministic response.
+2026-05-27 18:14:22 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 18:15:04 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'We are losing money somewhere in the revenue cycle. Walk me through where the biggest leakage points are from encounter to claim approval.'
+2026-05-27 18:15:10 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='billing' confidence=0.90
+2026-05-27 18:15:29 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql='SELECT e.encounter_id, e.patient_id, bc.claim_amount, bc.payer_name, bc.claim_status FROM encounters e JOIN billing_claims bc ON e.encounter_id = bc.encounter_id WHERE bc.has_coding_error = 1 OR bc.rejection_reason IS NOT NULL' | params=[] | This query identifies potential leakage points in the revenue cycle by joining encounters with billing claims and filtering for coding errors or rejections.
+2026-05-27 18:15:29 | INFO     | app.tools.text2sql:run_text2sql:161 — Text2SQL returned 461 rows for: 'We are losing money somewhere in the revenue cycle. Walk me through where the biggest leakage points are from encounter to claim approval.'
+2026-05-27 18:15:29 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 5 chunks for domain='billing' (distances: [0.39, 0.428, 0.435, 0.458, 0.466])
+2026-05-27 18:15:48 | INFO     | app.agents.billing:billing_node:91 — Billing agent completed. rejection_risk=Critical
+2026-05-27 18:16:19 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1210 char response.
+2026-05-27 18:16:19 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 18:16:23 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'If our hospital was audited by JCI and HIPAA regulators simultaneously tomorrow morning, what would they find and how bad would it be?'
+2026-05-27 18:16:29 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='compliance' confidence=0.90
+2026-05-27 18:16:50 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT af.*, cp.process_type, cp.staff_name, r.regulation_body FROM audit_findings af JOIN clinical_processes cp ON af.process_id = cp.process_id JOIN patients p ON cp.department = p.address WHERE af.audit_date >= ? AND af.resolution_status = 'Open' GROUP BY regulation_body" | params=['2023-03-09'] | This query will identify all open audit findings from JCI and HIPAA regulators on the day of the hypothetical audit, grouped by regulatory body.
+2026-05-27 18:16:50 | ERROR    | app.tools.text2sql:run_text2sql:168 — Text2SQL execution failed: List argument must consist only of tuples or dictionaries
+2026-05-27 18:16:50 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 5 chunks for domain='compliance' (distances: [0.383, 0.41, 0.427, 0.439, 0.452])
+2026-05-27 18:17:57 | INFO     | app.agents.compliance:compliance_node:73 — Compliance agent completed. severity=Critical|Major|Minor|None
+2026-05-27 18:18:33 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1857 char response.
+2026-05-27 18:18:33 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 18:18:51 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Give me a week-over-week health summary — are our key metrics improving or deteriorating across claims, compliance, pharmacy, patient SLA, and dispatch performance?'
+2026-05-27 18:18:58 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='billing' confidence=0.60
+2026-05-27 18:19:35 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT ?, ?, ?, ?, ? FROM ( SELECT SUM(claim_amount) AS claims, AVG(has_coding_error) AS compliance, COUNT(*) AS pharmacy, AVG(sla_breached) AS sla, AVG(delayed) AS dispatch FROM billing_claims WHERE claim_date >= DATE('now', '-7 days') ) UNION ALL SELECT ?, ?, ?, ?, ? FROM ( SELECT SUM(claim_amount) AS claims, AVG(has_coding_error) AS compliance, COUNT(*) AS pharmacy, AVG(sla_breached) AS sla, AVG(delayed) AS dispatch FROM billing_claims WHERE claim_date >= DATE('now', '-14 days') AND claim_date < DATE('now', '-7 days') )" | params=['claims', 'compliance', 'pharmacy', 'sla', 'dispatch', 'claims', 'compliance', 'pharmacy', 'sla', 'dispatch'] | This query calculates the week-over-week change in key metrics across claims, compliance, pharmacy, patient SLA, and dispatch performance.
+2026-05-27 18:19:35 | ERROR    | app.tools.text2sql:run_text2sql:168 — Text2SQL execution failed: List argument must consist only of tuples or dictionaries
+2026-05-27 18:19:35 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 5 chunks for domain='billing' (distances: [0.409, 0.442, 0.448, 0.465, 0.486])
+2026-05-27 18:20:00 | INFO     | app.agents.billing:billing_node:91 — Billing agent completed. rejection_risk=None
+2026-05-27 18:20:36 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1853 char response.
+2026-05-27 18:20:36 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 18:21:13 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Which emergency routes are causing the most SLA misses?'
+2026-05-27 18:21:18 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='dispatch' confidence=0.90
+2026-05-27 18:21:35 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT r.route_id, COUNT(*) AS sla_misses FROM delivery_records dr JOIN routes r ON dr.route_id = r.route_id WHERE r.delivery_category = 'Emergency' AND dr.sla_breached = 1 GROUP BY r.route_id ORDER BY sla_misses DESC LIMIT 50" | params=[] | This query identifies the emergency routes with the highest number of SLA misses.
+2026-05-27 18:21:35 | ERROR    | app.tools.text2sql:run_text2sql:168 — Text2SQL execution failed: (sqlite3.OperationalError) no such column: r.delivery_category
+[SQL: SELECT r.route_id, COUNT(*) AS sla_misses FROM delivery_records dr JOIN routes r ON dr.route_id = r.route_id WHERE r.delivery_category = 'Emergency' AND dr.sla_breached = 1 GROUP BY r.route_id ORDER BY sla_misses DESC LIMIT 50]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 18:21:57 | INFO     | app.agents.dispatch:dispatch_node:89 — Dispatch agent completed. assessments=0 critical=0
+2026-05-27 18:22:14 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 847 char response.
+2026-05-27 18:22:14 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 18:33:33 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'What is our emergency delivery on-time rate this month and which routes have the worst SLA compliance?'
+2026-05-27 18:33:49 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='dispatch' confidence=0.80
+2026-05-27 18:34:09 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT COUNT(*) AS on_time_rate, r.route_id FROM delivery_records dr JOIN routes r ON dr.route_id = r.route_id WHERE dr.delivery_category = 'Emergency' AND dr.sla_breached = 0 AND DATE('now', '-30 days') <= dr.actual_delivery_datetime GROUP BY r.route_id ORDER BY on_time_rate DESC LIMIT 10" | params=[] | This query calculates the on-time rate of emergency deliveries for the last month and identifies the routes with the worst SLA compliance.
+2026-05-27 18:34:09 | INFO     | app.tools.text2sql:run_text2sql:161 — Text2SQL returned 10 rows for: 'What is our emergency delivery on-time rate this month and which routes have the worst SLA compliance?'
+2026-05-27 18:34:38 | INFO     | app.agents.dispatch:dispatch_node:89 — Dispatch agent completed. assessments=0 critical=0
+2026-05-27 18:34:55 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 684 char response.
+2026-05-27 18:34:55 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 18:36:07 | INFO     | app.api.chat:chat_completions:118 — Processing query: '2026-05-27 18:16:50 | ERROR    | app.tools.text2sql:run_text2sql:168 — Text2SQL execution failed: List argument must consist only of tuples or dictionaries'
+2026-05-27 18:36:12 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='dispatch' confidence=0.80
+2026-05-27 18:36:17 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'If I need to dispatch an emergency delivery from AIIMS Delhi to Max Hospital Saket right now, which vehicle should I assign and which route gives the best SLA safety margin?'
+2026-05-27 18:36:24 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql='SELECT * FROM patients WHERE date_of_birth = ? AND patient_id = ?' | params=['2026-05-27', 'PAT000001'] | This query retrieves a patient's information based on their birthdate and ID.
+2026-05-27 18:36:24 | ERROR    | app.tools.text2sql:run_text2sql:168 — Text2SQL execution failed: List argument must consist only of tuples or dictionaries
+2026-05-27 18:36:28 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='dispatch' confidence=1.00
+2026-05-27 18:36:32 | INFO     | app.agents.dispatch:dispatch_node:89 — Dispatch agent completed. assessments=0 critical=0
+2026-05-27 18:36:52 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT v.vehicle_id, r.traffic_factor, ROUND(r.estimated_duration_minutes * r.traffic_factor) AS adjusted_eta FROM vehicles v JOIN routes r ON v.base_location = 'AIIMS Delhi' AND r.origin = 'AIIMS Delhi' WHERE r.destination = 'Max Hospital Saket' ORDER BY adjusted_eta LIMIT 1" | params=[] | This query selects the vehicle and route with the best SLA safety margin for an emergency delivery from AIIMS Delhi to Max Hospital Saket.
+2026-05-27 18:36:52 | INFO     | app.tools.text2sql:run_text2sql:161 — Text2SQL returned 0 rows for: 'If I need to dispatch an emergency delivery from AIIMS Delhi to Max Hospital Saket right now, which vehicle should I assign and which route gives the best SLA safety margin?'
+2026-05-27 18:37:03 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 602 char response.
+2026-05-27 18:37:03 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 18:37:25 | INFO     | app.agents.dispatch:dispatch_node:89 — Dispatch agent completed. assessments=0 critical=0
+2026-05-27 18:37:49 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 953 char response.
+2026-05-27 18:37:49 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 18:39:51 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'What is our overall SLA compliance rate this week across GP, Specialist, and Emergency appointment categories?'
+2026-05-27 18:39:56 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='patient' confidence=0.90
+2026-05-27 18:40:29 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT COUNT(CASE WHEN a.appointment_category = 'GP' AND a.wait_time_minutes <= (SELECT sla_threshold_minutes FROM patient_complaints WHERE appointment_id = a.appointment_id) THEN 1 END) AS gp_sla_compliant, COUNT(CASE WHEN a.appointment_category = 'Specialist' AND a.wait_time_minutes <= (SELECT sla_threshold_minutes FROM patient_complaints WHERE appointment_id = a.appointment_id) THEN 1 END) AS specialist_sla_compliant, COUNT(CASE WHEN a.appointment_category = 'Emergency' AND a.wait_time_minutes <= (SELECT sla_threshold_minutes FROM patient_complaints WHERE appointment_id = a.appointment_id) THEN 1 END) AS emergency_sla_compliant FROM appointments a" | params=[] | Calculates the overall SLA compliance rate for GP, Specialist, and Emergency appointment categories this week.
+2026-05-27 18:40:29 | INFO     | app.tools.text2sql:run_text2sql:161 — Text2SQL returned 1 rows for: 'What is our overall SLA compliance rate this week across GP, Specialist, and Emergency appointment categories?'
+2026-05-27 18:40:32 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 4 chunks for domain='patient' (distances: [0.24, 0.385, 0.387, 0.393])
+2026-05-27 18:40:35 | INFO     | app.agents.patient:patient_node:70 — Patient agent completed. sla_breached=None
+2026-05-27 18:40:51 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 930 char response.
+2026-05-27 18:40:52 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 18:41:29 | INFO     | app.api.chat:chat_completions:118 — Processing query: "Show me the top 5 ICD-10 codes driving claim rejections and estimate the total revenue at risk if we don't fix them."
+2026-05-27 18:41:34 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='billing' confidence=0.90
+2026-05-27 18:41:54 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT bc.cpt_code, COUNT(*) AS rejection_count, SUM(bc.claim_amount) AS revenue_at_risk FROM billing_claims bc JOIN encounters e ON bc.encounter_id = e.encounter_id WHERE bc.claim_status = 'Rejected' GROUP BY bc.cpt_code ORDER BY rejection_count DESC LIMIT 5" | params=[] | This query shows the top 5 ICD-10 codes driving claim rejections and estimates the total revenue at risk if we don't fix them.
+2026-05-27 18:41:54 | INFO     | app.tools.text2sql:run_text2sql:161 — Text2SQL returned 5 rows for: "Show me the top 5 ICD-10 codes driving claim rejections and estimate the total revenue at risk if we don't fix them."
+2026-05-27 18:41:54 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 5 chunks for domain='billing' (distances: [0.282, 0.288, 0.37, 0.406, 0.43])
+2026-05-27 18:42:25 | INFO     | app.agents.billing:billing_node:91 — Billing agent completed. rejection_risk=None
+2026-05-27 18:42:56 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1021 char response.
+2026-05-27 18:42:56 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 19:01:42 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'How many VIP patients experienced a Critical SLA breach this month and what is the total compensation liability we are exposed to?'
+2026-05-27 19:02:00 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='patient' confidence=0.90
+2026-05-27 19:02:27 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT COUNT(*) AS vip_breaches, SUM(CASE WHEN c.compensation_eligible = 1 THEN p.patient_tier ELSE 0 END) AS total_compensation_liability FROM patient_complaints pc JOIN patients p ON pc.patient_id = p.patient_id LEFT JOIN appointments a ON pc.appointment_id = a.appointment_id WHERE p.patient_tier = 'VIP' AND pc.breach_severity = 'Critical' AND pc.complaint_date >= DATE('now', '-30 days')" | params=[] | This query counts the number of VIP patients who experienced a Critical SLA breach this month and calculates the total compensation liability we are exposed to.
+2026-05-27 19:02:27 | ERROR    | app.tools.text2sql:run_text2sql:168 — Text2SQL execution failed: (sqlite3.OperationalError) no such column: c.compensation_eligible
+[SQL: SELECT COUNT(*) AS vip_breaches, SUM(CASE WHEN c.compensation_eligible = 1 THEN p.patient_tier ELSE 0 END) AS total_compensation_liability FROM patient_complaints pc JOIN patients p ON pc.patient_id = p.patient_id LEFT JOIN appointments a ON pc.appointment_id = a.appointment_id WHERE p.patient_tier = 'VIP' AND pc.breach_severity = 'Critical' AND pc.complaint_date >= DATE('now', '-30 days')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 19:02:29 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 4 chunks for domain='patient' (distances: [0.225, 0.327, 0.35, 0.366])
+2026-05-27 19:02:47 | INFO     | app.agents.patient:patient_node:70 — Patient agent completed. sla_breached=False
+2026-05-27 19:02:59 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 560 char response.
+2026-05-27 19:02:59 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 19:07:31 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 19:07:31 | DEBUG    | app.alerts.email_service:_evaluate_domain_rules:169 — Alert COMP_001 on cooldown — skipping
+2026-05-27 19:07:31 | DEBUG    | app.alerts.email_service:_evaluate_domain_rules:169 — Alert PHAR_001 on cooldown — skipping
+2026-05-27 19:07:31 | DEBUG    | app.alerts.email_service:_evaluate_domain_rules:169 — Alert PHAR_002 on cooldown — skipping
+2026-05-27 19:07:31 | DEBUG    | app.alerts.email_service:_evaluate_domain_rules:169 — Alert PHAR_003 on cooldown — skipping
+2026-05-27 19:07:31 | DEBUG    | app.alerts.email_service:_evaluate_domain_rules:169 — Alert PAT_002 on cooldown — skipping
+2026-05-27 19:07:31 | DEBUG    | app.alerts.email_service:_evaluate_domain_rules:169 — Alert DISP_001 on cooldown — skipping
+2026-05-27 19:07:31 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 0 alert(s) fired across 5 domains
+2026-05-27 19:07:31 | INFO     | app.alerts.scheduler:alert_scheduler_loop:33 — Alert scheduler: no alerts triggered
+2026-05-27 19:28:52 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:29:00 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:29:32 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:29:39 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:30:12 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:30:19 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:30:26 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:30:39 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:30:46 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:31:19 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:31:25 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:31:55 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 19:31:55 | ERROR    | app.alerts.email_service:_evaluate_domain_rules:215 — Alert rule BILL_001 evaluation failed: (sqlite3.OperationalError) no such table: billing_claims
+[SQL: SELECT ROUND(100.0 * SUM(CASE WHEN claim_status='Rejected' THEN 1 ELSE 0 END) / COUNT(*), 1) AS rate FROM billing_claims WHERE claim_date >= DATE('now', '-1 day')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 19:31:55 | ERROR    | app.alerts.email_service:_evaluate_domain_rules:215 — Alert rule BILL_002 evaluation failed: (sqlite3.OperationalError) no such table: billing_claims
+[SQL: SELECT COUNT(*) AS count FROM billing_claims WHERE has_coding_error = 1 AND created_at >= DATE('now', '-1 day')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 19:31:55 | ERROR    | app.alerts.email_service:_evaluate_domain_rules:215 — Alert rule COMP_001 evaluation failed: (sqlite3.OperationalError) no such table: audit_findings
+[SQL: SELECT COUNT(*) AS count FROM audit_findings WHERE severity = 'Critical' AND resolution_status = 'Open']
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 19:31:55 | ERROR    | app.alerts.email_service:_evaluate_domain_rules:215 — Alert rule COMP_002 evaluation failed: (sqlite3.OperationalError) no such table: audit_findings
+[SQL: SELECT COUNT(*) AS count FROM audit_findings WHERE regulation_body = 'HIPAA' AND audit_date >= DATE('now', '-7 days')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 19:31:55 | ERROR    | app.alerts.email_service:_evaluate_domain_rules:215 — Alert rule PHAR_001 evaluation failed: (sqlite3.OperationalError) no such table: drug_inventory
+[SQL: SELECT COUNT(*) AS count, ROUND(SUM(di.current_stock * d.unit_cost), 2) AS value FROM drug_inventory di JOIN drugs d ON di.drug_id = d.drug_id WHERE julianday(di.expiry_date) - julianday('now') BETWEEN 0 AND 30]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 19:31:55 | ERROR    | app.alerts.email_service:_evaluate_domain_rules:215 — Alert rule PHAR_002 evaluation failed: (sqlite3.OperationalError) no such table: drug_inventory
+[SQL: SELECT COUNT(*) AS count FROM drug_inventory WHERE current_stock < reorder_threshold]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 19:31:55 | ERROR    | app.alerts.email_service:_evaluate_domain_rules:215 — Alert rule PHAR_003 evaluation failed: (sqlite3.OperationalError) no such table: drug_inventory
+[SQL: SELECT COUNT(*) AS count FROM drug_inventory WHERE julianday(expiry_date) - julianday('now') < 0 AND current_stock > 0]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 19:31:55 | ERROR    | app.alerts.email_service:_evaluate_domain_rules:215 — Alert rule PAT_001 evaluation failed: (sqlite3.OperationalError) no such table: patient_complaints
+[SQL: SELECT COUNT(*) AS count FROM patient_complaints WHERE breach_severity = 'Critical' AND complaint_date >= DATE('now', '-1 day')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 19:31:55 | ERROR    | app.alerts.email_service:_evaluate_domain_rules:215 — Alert rule PAT_002 evaluation failed: (sqlite3.OperationalError) no such table: patient_complaints
+[SQL: SELECT COUNT(*) AS count FROM patient_complaints WHERE resolution_status = 'Open']
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 19:31:55 | ERROR    | app.alerts.email_service:_evaluate_domain_rules:215 — Alert rule DISP_001 evaluation failed: (sqlite3.OperationalError) no such table: delivery_records
+[SQL: SELECT COUNT(*) AS count FROM delivery_records WHERE delivery_category = 'Emergency' AND delivery_status = 'Delayed']
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 19:31:55 | ERROR    | app.alerts.email_service:_evaluate_domain_rules:215 — Alert rule DISP_002 evaluation failed: (sqlite3.OperationalError) no such table: delivery_records
+[SQL: SELECT ROUND(100.0 * SUM(CASE WHEN sla_breached=1 THEN 1 ELSE 0 END) / COUNT(*), 1) AS rate FROM delivery_records WHERE DATE(scheduled_datetime) >= DATE('now', '-1 day')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 19:31:55 | ERROR    | app.alerts.email_service:_evaluate_domain_rules:215 — Alert rule DISP_003 evaluation failed: (sqlite3.OperationalError) no such table: vehicles
+[SQL: SELECT COUNT(*) AS count FROM vehicles WHERE vehicle_type = 'Ambulance' AND available = 1]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-27 19:31:55 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 0 alert(s) fired across 5 domains
+2026-05-27 19:31:55 | INFO     | app.alerts.scheduler:alert_scheduler_loop:33 — Alert scheduler: no alerts triggered
+2026-05-27 19:40:41 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:41:11 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 19:41:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-27 19:41:11 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: Billing rejection rate exceeded 21.1% in last 24h → ['billing-manager@hospital.local', 'cfo@hospital.local']
+2026-05-27 19:41:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-27 19:41:11 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 439 new coding errors detected in last 24h → ['billing-manager@hospital.local', 'cfo@hospital.local']
+2026-05-27 19:41:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-27 19:41:11 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 18 Critical compliance violation(s) unresolved → ['compliance-officer@hospital.local', 'cco@hospital.local']
+2026-05-27 19:41:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-27 19:41:11 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 11 HIPAA violations recorded this week → ['compliance-officer@hospital.local', 'cco@hospital.local']
+2026-05-27 19:41:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-27 19:41:11 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 19:41:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-27 19:41:11 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 126 drug items below reorder threshold → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 19:41:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-27 19:41:11 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 242 expired drug batches still in active inventory → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 19:41:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-27 19:41:11 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 2 Critical SLA breach(es) today — patient escalation required → ['patient-experience@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 19:41:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-27 19:41:11 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 92 unresolved patient complaints in queue → ['patient-experience@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 19:41:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-27 19:41:11 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 132 Emergency medical delivery/deliveries delayed → ['logistics-manager@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 19:41:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_002 | High | ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-27 19:41:11 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: Dispatch SLA breach rate is 45.7% in last 24h → ['logistics-manager@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 19:41:11 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
+2026-05-27 19:41:11 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired
+2026-05-27 19:42:36 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:42:40 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:43:10 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 19:43:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-27 19:43:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: Billing rejection rate exceeded 21.1% in last 24h → ['billing-manager@hospital.local', 'cfo@hospital.local']
+2026-05-27 19:43:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-27 19:43:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 439 new coding errors detected in last 24h → ['billing-manager@hospital.local', 'cfo@hospital.local']
+2026-05-27 19:43:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-27 19:43:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 18 Critical compliance violation(s) unresolved → ['compliance-officer@hospital.local', 'cco@hospital.local']
+2026-05-27 19:43:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-27 19:43:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 11 HIPAA violations recorded this week → ['compliance-officer@hospital.local', 'cco@hospital.local']
+2026-05-27 19:43:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-27 19:43:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 19:43:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-27 19:43:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 126 drug items below reorder threshold → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 19:43:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-27 19:43:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 242 expired drug batches still in active inventory → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 19:43:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-27 19:43:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 2 Critical SLA breach(es) today — patient escalation required → ['patient-experience@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 19:43:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-27 19:43:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 92 unresolved patient complaints in queue → ['patient-experience@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 19:43:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-27 19:43:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 132 Emergency medical delivery/deliveries delayed → ['logistics-manager@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 19:43:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_002 | High | ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-27 19:43:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: Dispatch SLA breach rate is 45.7% in last 24h → ['logistics-manager@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 19:43:10 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
+2026-05-27 19:43:10 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired
+2026-05-27 19:44:15 | INFO     | app.api.chat:chat_completions:120 — Processing query: 'Hi'
+2026-05-27 19:44:33 | INFO     | app.agents.planner:planner_node:48 — Planner → intent='dispatch' confidence=0.50
+2026-05-27 19:44:33 | WARNING  | app.agents.planner:planner_node:52 — RBAC block: Role 'guest' denied access to 'dispatch'.
+2026-05-27 19:47:47 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:48:17 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:48:23 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:48:51 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 19:49:21 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 19:49:21 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-27 19:49:21 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: Billing rejection rate exceeded 21.1% in last 24h → ['billing-manager@hospital.local', 'cfo@hospital.local']
+2026-05-27 19:49:21 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-27 19:49:21 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 439 new coding errors detected in last 24h → ['billing-manager@hospital.local', 'cfo@hospital.local']
+2026-05-27 19:49:21 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-27 19:49:21 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 18 Critical compliance violation(s) unresolved → ['compliance-officer@hospital.local', 'cco@hospital.local']
+2026-05-27 19:49:21 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-27 19:49:21 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 11 HIPAA violations recorded this week → ['compliance-officer@hospital.local', 'cco@hospital.local']
+2026-05-27 19:49:21 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-27 19:49:21 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 19:49:21 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-27 19:49:21 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 126 drug items below reorder threshold → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 19:49:21 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-27 19:49:21 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 242 expired drug batches still in active inventory → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 19:49:21 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-27 19:49:21 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 2 Critical SLA breach(es) today — patient escalation required → ['patient-experience@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 19:49:21 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-27 19:49:21 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 92 unresolved patient complaints in queue → ['patient-experience@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 19:49:21 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-27 19:49:21 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 132 Emergency medical delivery/deliveries delayed → ['logistics-manager@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 19:49:21 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_002 | High | ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-27 19:49:21 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: Dispatch SLA breach rate is 45.7% in last 24h → ['logistics-manager@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 19:49:21 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
+2026-05-27 19:49:21 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired
+2026-05-27 19:49:41 | INFO     | app.api.chat:chat_completions:120 — Processing query: 'Hi'
+2026-05-27 19:49:57 | INFO     | app.agents.planner:planner_node:48 — Planner → intent='general' confidence=1.00
+2026-05-27 19:49:59 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 62 char response.
+2026-05-27 19:50:15 | INFO     | app.api.chat:chat_completions:120 — Processing query: 'what all departments does the hospital have?'
+2026-05-27 19:50:20 | INFO     | app.agents.planner:planner_node:48 — Planner → intent='general' confidence=1.00
+2026-05-27 19:50:40 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1047 char response.
+2026-05-27 19:51:19 | INFO     | app.api.chat:chat_completions:120 — Processing query: 'How many complaints are currently Open and unresolved for more than 48 hours — these represent our highest escalation risk right now.'
+2026-05-27 19:51:25 | INFO     | app.agents.planner:planner_node:48 — Planner → intent='patient' confidence=0.80
+2026-05-27 19:51:25 | WARNING  | app.agents.planner:planner_node:52 — RBAC block: Role 'guest' denied access to 'patient'.
+2026-05-27 19:54:25 | INFO     | app.api.chat:chat_completions:120 — Processing query: 'How many complaints are currently Open and unresolved for more than 48 hours — these represent our highest escalation risk right now.'
+2026-05-27 19:54:31 | INFO     | app.agents.planner:planner_node:48 — Planner → intent='patient' confidence=0.95
+2026-05-27 19:54:43 | DEBUG    | app.tools.text2sql:run_text2sql:87 — Text2SQL [Attempt 1] | sql="SELECT COUNT(*) FROM patient_complaints WHERE resolution_status = 'Open' AND resolved_at IS NULL AND complaint_date < DATE('now', '-2 days')" | params=[] | Counting the number of open and unresolved complaints for more than 48 hours.
+2026-05-27 19:54:43 | INFO     | app.tools.text2sql:run_text2sql:103 — Text2SQL returned 1 rows for: 'How many complaints are currently Open and unresolved for more than 48 hours — these represent our highest escalation risk right now.'
+2026-05-27 19:54:47 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 4 chunks for domain='patient' (distances: [0.292, 0.339, 0.378, 0.393])
+2026-05-27 19:54:50 | INFO     | app.agents.patient:patient_node:70 — Patient agent completed. sla_breached=None
+2026-05-27 19:55:03 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 689 char response.
+2026-05-27 19:55:35 | INFO     | app.api.chat:chat_completions:120 — Processing query: 'can i have the list of complaints'
+2026-05-27 19:55:40 | INFO     | app.agents.planner:planner_node:48 — Planner → intent='patient' confidence=0.80
+2026-05-27 19:55:47 | DEBUG    | app.tools.text2sql:run_text2sql:87 — Text2SQL [Attempt 1] | sql='SELECT * FROM patient_complaints' | params=[] | Retrieving all complaint records from the patient_complaints table.
+2026-05-27 19:55:47 | INFO     | app.tools.text2sql:run_text2sql:103 — Text2SQL returned 310 rows for: 'can i have the list of complaints'
+2026-05-27 19:55:49 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 4 chunks for domain='patient' (distances: [0.445, 0.498, 0.5, 0.504])
+2026-05-27 19:59:15 | INFO     | app.agents.patient:patient_node:70 — Patient agent completed. sla_breached=None
+2026-05-27 20:00:18 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1424 char response.
+2026-05-27 20:12:00 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 20:12:30 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 20:12:30 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-27 20:12:34 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local']: ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-27 20:12:34 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-27 20:12:38 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local']: ALERT: 439 new coding errors detected in last 24h
+2026-05-27 20:12:38 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-27 20:12:42 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local']: URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-27 20:12:42 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-27 20:12:46 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local']: ALERT: 11 HIPAA violations recorded this week
+2026-05-27 20:12:46 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-27 20:12:50 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-27 20:12:50 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-27 20:12:54 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']: ALERT: 126 drug items below reorder threshold
+2026-05-27 20:12:54 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-27 20:12:58 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']: URGENT: 242 expired drug batches still in active inventory
+2026-05-27 20:12:58 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-27 20:13:02 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local']: ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-27 20:13:02 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-27 20:13:06 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local']: ALERT: 92 unresolved patient complaints in queue
+2026-05-27 20:13:06 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-27 20:13:10 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local']: URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-27 20:13:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_002 | High | ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-27 20:13:14 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local']: ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-27 20:13:14 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
+2026-05-27 20:13:14 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired

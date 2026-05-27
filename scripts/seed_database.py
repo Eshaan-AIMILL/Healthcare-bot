@@ -13,7 +13,7 @@ from app.config import settings
 from app.db.session import init_db, AsyncSessionLocal
 from app.db.models import (
     Patient, Encounter, BillingClaim, ClinicalProcess, AuditFinding,
-    Drug, DrugInventory, Appointment, PatientComplaint, Vehicle, Route, DeliveryRecord,
+    Drug, DrugInventory, Appointment, PatientComplaint, Vehicle, Route, DeliveryRecord, AuditLog
 )
 
 fake = Faker("en_IN")
@@ -399,6 +399,19 @@ async def seed_dispatch(db: AsyncSession) -> None:
     await db.commit()
     print(f"  ✓ 40 vehicles + 60 routes + {N} delivery records")
 
+async def seed_audit_logs(db: AsyncSession) -> None:
+    for _ in range(N // 4):
+        db.add(AuditLog(
+            timestamp=rand_datetime(30),
+            role=random.choice(["admin", "reception"]),
+            action=random.choice(["VIEW_PATIENT", "EXPORT_BILLING", "QUERY_SQL", "LOGIN"]),
+            target_resource=fake.file_path(),
+            query_text="SELECT * FROM patients LIMIT 10" if random.random() > 0.5 else None,
+            status=random.choices(["Success", "Blocked", "Error"], weights=[0.8, 0.15, 0.05])[0]
+        ))
+    await db.commit()
+    print(f"  ✓ {N // 4} audit logs")
+
 
 async def main() -> None:
     print(f"\nSeeding database with N={N} rows per domain...")
@@ -421,6 +434,9 @@ async def main() -> None:
 
     async with AsyncSessionLocal() as db:
         await seed_dispatch(db)
+
+    async with AsyncSessionLocal() as db:
+        await seed_audit_logs(db)
 
     print("\n✅ Database seeding complete.\n")
 
