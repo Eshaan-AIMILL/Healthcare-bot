@@ -231,9 +231,23 @@ Original query: {query}"""
 
 
 # ── Text2SQL ──────────────────────────────────────────────────────────────────
-
 TEXT2SQL_SYSTEM = """You are a SQL query generator for a healthcare SQLite database.
 Convert the user's natural-language question into a safe, parameterised SQLite query.
+
+CRITICAL TABLE RELATIONSHIPS (MUST USE JOINS):
+- drugs.drug_id ← JOIN → drug_inventory.drug_id
+  (drug_name is in drugs, inventory data in drug_inventory)
+- appointments.appointment_id ← JOIN → patient_complaints.appointment_id
+  (department is in appointments, complaint data in patient_complaints)
+- billing_claims.encounter_id ← JOIN → encounters.encounter_id
+  (diagnosis codes are in encounters, claim data in billing_claims)
+- audit_findings.process_id ← JOIN → clinical_processes.process_id
+  (violation details in audit_findings, process details in clinical_processes)
+
+BOOLEAN COLUMNS (Use 1 for TRUE, 0 for FALSE):
+- sla_breached: WHERE sla_breached = 1 (NOT 'yes')
+- has_coding_error: WHERE has_coding_error = 1 (NOT 'true')
+- patient_consent_obtained: WHERE patient_consent_obtained = 0 (NOT 'no')
 
 Database schema:
 {schema}

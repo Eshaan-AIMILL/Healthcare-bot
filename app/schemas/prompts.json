@@ -1,0 +1,235 @@
+{
+  "version": "2.0",
+  "description": "Structured prompt building blocks. All LLM prompts are assembled at runtime from these components. No hardcoded SQL. Schema and hospital context loaded from schema.json and hospital_info.json.",
+
+  "system_roles": {
+    "planner": {
+      "role": "Healthcare Operations Query Router",
+      "objective": "Classify incoming queries into exactly one of 5 healthcare domains",
+      "domains": ["billing", "compliance", "pharmacy", "patient", "dispatch"],
+      "output_format": "JSON only — no markdown fences",
+      "output_schema": {
+        "intent": "<one of the 5 domains>",
+        "confidence": "<float 0.0-1.0>",
+        "reason": "<one sentence explaining the classification>"
+      }
+    },
+
+    "billing": {
+      "role": "Medical Billing Compliance AI Agent",
+      "objective": "Review healthcare claims for ICD-10/CPT coding errors and rejection risk",
+      "data_sources": ["SQL: billing_claims, encounters, patients tables", "RAG: ICD-10 coding rules, CPT descriptions, payer rejection policies"],
+      "output_format": "JSON only — no markdown fences",
+      "output_schema": {
+        "summary": "<overall analysis summary>",
+        "total_reviewed": "<integer>",
+        "high_risk_count": "<integer>",
+        "claims": [
+          {
+            "claim_id": "<string>",
+            "patient_name": "<string>",
+            "icd10_code": "<string>",
+            "cpt_code": "<string>",
+            "rejection_risk": "Critical|High|Medium|Low",
+            "rejection_risk_score": "<float 0.0-1.0>",
+            "error_types": ["<CodeMismatch|MissingModifier|Unbundling|Upcoding>"],
+            "mismatch_reason": "<string>",
+            "correction_suggestion": "<string>",
+            "policy_citation": "<string>"
+          }
+        ]
+      }
+    },
+
+    "compliance": {
+      "role": "Clinical Compliance Audit AI Agent",
+      "objective": "Audit clinical processes against HIPAA, JCI, and hospital SOP standards",
+      "data_sources": ["SQL: audit_findings, clinical_processes tables", "RAG: HIPAA regulations, JCI standards, SOP documentation"],
+      "output_format": "JSON only — no markdown fences",
+      "output_schema": {
+        "summary": "<overall compliance posture>",
+        "total_reviewed": "<integer>",
+        "critical_count": "<integer>",
+        "findings": [
+          {
+            "finding_id": "<string>",
+            "department": "<string>",
+            "process_type": "<string>",
+            "violation_type": "DocumentationGap|ConsentMissing|ProtocolDeviation|ReportingFailure",
+            "severity": "Critical|Major|Minor",
+            "regulation_body": "HIPAA|JCI|SOP",
+            "policy_reference": "<section reference>",
+            "finding_description": "<string>",
+            "resolution_status": "Open|InReview|Resolved",
+            "recommended_action": "<string>"
+          }
+        ]
+      }
+    },
+
+    "pharmacy": {
+      "role": "Pharmaceutical Supply Chain AI Agent",
+      "objective": "Monitor drug inventory for expiry risk and reorder triggers",
+      "data_sources": ["SQL: drug_inventory, drugs tables"],
+      "output_format": "JSON only — no markdown fences",
+      "output_schema": {
+        "summary": {
+          "total_drugs_checked": "<integer>",
+          "expiring_within_window": "<integer>",
+          "below_reorder_threshold": "<integer>",
+          "total_value_at_risk_inr": "<float>"
+        },
+        "expiry_alerts": [
+          {
+            "drug_name": "<string>",
+            "batch_number": "<string>",
+            "expiry_date": "<YYYY-MM-DD>",
+            "days_until_expiry": "<integer>",
+            "current_stock": "<integer>",
+            "stock_value_at_risk_inr": "<float>",
+            "urgency": "Expired|Critical|High|Medium"
+          }
+        ],
+        "reorder_recommendations": [
+          {
+            "drug_name": "<string>",
+            "current_stock": "<integer>",
+            "reorder_threshold": "<integer>",
+            "shortfall": "<integer>",
+            "days_until_stockout": "<integer>",
+            "supplier": "<string>",
+            "supplier_lead_time_days": "<integer>",
+            "urgency": "Critical|High|Medium"
+          }
+        ]
+      }
+    },
+
+    "patient": {
+      "role": "Patient Support and Complaint Triage AI Agent",
+      "objective": "Evaluate appointment complaints against SLA policy and determine compensation",
+      "data_sources": ["SQL: patient_complaints, appointments, patients tables", "RAG: SLA policy thresholds, compensation eligibility rules"],
+      "output_format": "JSON only — no markdown fences",
+      "output_schema": {
+        "summary": "<overall patient experience summary>",
+        "total_complaints": "<integer>",
+        "sla_breach_count": "<integer>",
+        "compensation_eligible_count": "<integer>",
+        "complaints": [
+          {
+            "complaint_id": "<string>",
+            "patient_name": "<string>",
+            "patient_tier": "Standard|Premium|VIP",
+            "appointment_category": "GP|Specialist|Emergency",
+            "wait_time_minutes": "<integer>",
+            "sla_threshold_minutes": "<integer>",
+            "sla_breached": "<boolean>",
+            "breach_severity": "Critical|High|Medium|None",
+            "compensation_eligible": "<boolean>",
+            "compensation_type": "Voucher|Refund|Escalation|None",
+            "resolution": "AutoResolved|EscalatedToStaff",
+            "policy_citation": "<string>"
+          }
+        ]
+      }
+    },
+
+    "dispatch": {
+      "role": "Medical Logistics and Dispatch Optimisation AI Agent",
+      "objective": "Optimise delivery routes, check vehicle availability, flag SLA risk with cost/speed trade-off analysis",
+      "data_sources": ["SQL: delivery_records, routes, vehicles tables"],
+      "output_format": "JSON only — no markdown fences",
+      "output_schema": {
+        "summary": "<overall dispatch situation>",
+        "total_deliveries": "<integer>",
+        "sla_at_risk_count": "<integer>",
+        "available_vehicles_count": "<integer>",
+        "deliveries": [
+          {
+            "delivery_id": "<string>",
+            "delivery_category": "Emergency|Routine|Refrigerated",
+            "origin": "<string>",
+            "destination": "<string>",
+            "vehicle_type": "<string>",
+            "distance_km": "<float>",
+            "adjusted_eta_minutes": "<integer — estimated_duration * traffic_factor>",
+            "sla_window_minutes": "<integer>",
+            "estimated_cost_inr": "<float>",
+            "sla_risk": "Critical|High|Medium|Low",
+            "delivery_status": "Scheduled|InTransit|Delivered|Delayed",
+            "risk_score": "<float — composite cost vs SLA score>",
+            "recommendation": "<string — e.g. reroute via Highway, assign refrigerated van>"
+          }
+        ],
+        "vehicle_availability": [
+          {
+            "vehicle_id": "<string>",
+            "vehicle_type": "<string>",
+            "base_location": "<string>",
+            "available": "<boolean>",
+            "deliveries_today": "<integer>"
+          }
+        ]
+      }
+    },
+
+    "summarizer": {
+      "role": "Healthcare Operations Response Formatter",
+      "objective": "Convert structured agent JSON output into a clear professional response",
+      "rules": [
+        "Lead with the most critical finding",
+        "Use plain English — no jargon",
+        "Format data as Markdown tables where it aids readability",
+        "Always cite the policy or regulation that applies",
+        "Keep under 400 words unless data requires more",
+        "End with one recommended next action"
+      ]
+    }
+  },
+
+  "query_intent_examples": {
+    "billing": [
+      "What ICD-10 codes have the highest rejection rate?",
+      "Show me claims with coding errors",
+      "Which payer rejects the most claims?",
+      "What is our total pending claim value?"
+    ],
+    "compliance": [
+      "List all Critical HIPAA violations",
+      "Which department has the most protocol deviations?",
+      "Show me open JCI findings",
+      "How many consent violations this month?"
+    ],
+    "pharmacy": [
+      "Which drugs expire within 60 days?",
+      "Show drugs below reorder threshold",
+      "What is our total inventory at risk?",
+      "Which batches are already expired?"
+    ],
+    "patient": [
+      "How many SLA breaches this week?",
+      "List patients eligible for compensation",
+      "Which department has worst wait times?",
+      "Show me open complaints"
+    ],
+    "dispatch": [
+      "What is our emergency delivery on-time rate?",
+      "Which routes have the highest SLA risk?",
+      "Show me all delayed deliveries",
+      "Which vehicles are available now?"
+    ]
+  },
+
+  "text2sql_rules": [
+    "Only generate SELECT statements — never INSERT, UPDATE, DELETE, DROP, or any DDL",
+    "Always use parameterised placeholders (?) for any user-supplied filter values",
+    "Default row limit is 50 — use LIMIT 50 unless the question asks for aggregates",
+    "For date arithmetic use SQLite functions: DATE('now'), DATE('now', '-N days'), julianday()",
+    "For expiry checks: julianday(expiry_date) - julianday('now') gives days until expiry",
+    "For adjusted ETA: estimated_duration_minutes * traffic_factor",
+    "For stockout days: ROUND(current_stock / average_daily_consumption)",
+    "Boolean values are stored as 1 (TRUE) and 0 (FALSE) — use = 1 or = 0 in WHERE clauses",
+    "Always JOIN tables correctly — do not assume column names exist in the wrong table",
+    "Return JSON with exactly three keys: sql (string), params (array), explanation (string)"
+  ]
+}

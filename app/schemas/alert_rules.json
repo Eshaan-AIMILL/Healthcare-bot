@@ -1,0 +1,165 @@
+{
+  "description": "Alert rules engine — defines when email alerts fire, what triggers them, and who receives them.",
+
+  "global": {
+    "check_interval_minutes": 60,
+    "max_alerts_per_run": 50,
+    "alert_cooldown_hours": 24,
+    "from_address": "healthbot-alerts@hospital.local"
+  },
+
+  "billing": {
+    "enabled": true,
+    "recipients": ["billing-manager@hospital.local", "cfo@hospital.local"],
+    "rules": [
+      {
+        "rule_id": "BILL_001",
+        "name": "High Rejection Rate",
+        "description": "Daily rejection rate exceeds threshold",
+        "trigger_sql": "SELECT ROUND(100.0 * SUM(CASE WHEN claim_status='Rejected' THEN 1 ELSE 0 END) / COUNT(*), 1) AS rate FROM billing_claims WHERE claim_date >= DATE('now', '-1 day')",
+        "condition": "rate > 15",
+        "severity": "Critical",
+        "subject": "ALERT: Billing rejection rate exceeded {rate}% in last 24h",
+        "body_template": "The claim rejection rate for the last 24 hours is {rate}%. This exceeds the 15% threshold. Immediate review of coding errors is required."
+      },
+      {
+        "rule_id": "BILL_002",
+        "name": "Coding Errors Spike",
+        "description": "New coding errors in last 24 hours",
+        "trigger_sql": "SELECT COUNT(*) AS count FROM billing_claims WHERE has_coding_error = 1 AND created_at >= DATE('now', '-1 day')",
+        "condition": "count > 20",
+        "severity": "High",
+        "subject": "ALERT: {count} new coding errors detected in last 24h",
+        "body_template": "{count} claims with coding errors were submitted in the last 24 hours. Please review the billing queue."
+      }
+    ]
+  },
+
+  "compliance": {
+    "enabled": true,
+    "recipients": ["compliance-officer@hospital.local", "cco@hospital.local"],
+    "rules": [
+      {
+        "rule_id": "COMP_001",
+        "name": "Critical Violation Open",
+        "description": "Any Critical severity finding remains open",
+        "trigger_sql": "SELECT COUNT(*) AS count FROM audit_findings WHERE severity = 'Critical' AND resolution_status = 'Open'",
+        "condition": "count > 0",
+        "severity": "Critical",
+        "subject": "URGENT: {count} Critical compliance violation(s) unresolved",
+        "body_template": "There are {count} Critical severity compliance violations currently Open. These require immediate action. Please log into the compliance portal to review."
+      },
+      {
+        "rule_id": "COMP_002",
+        "name": "HIPAA Violations This Week",
+        "description": "New HIPAA violations in past 7 days",
+        "trigger_sql": "SELECT COUNT(*) AS count FROM audit_findings WHERE regulation_body = 'HIPAA' AND audit_date >= DATE('now', '-7 days')",
+        "condition": "count > 5",
+        "severity": "High",
+        "subject": "ALERT: {count} HIPAA violations recorded this week",
+        "body_template": "{count} HIPAA violations were recorded in the last 7 days. Review immediately to avoid regulatory penalties."
+      }
+    ]
+  },
+
+  "pharmacy": {
+    "enabled": true,
+    "recipients": ["pharmacy-manager@hospital.local", "supply-chain@hospital.local"],
+    "rules": [
+      {
+        "rule_id": "PHAR_001",
+        "name": "Drugs Expiring in 30 Days",
+        "description": "Drug batches expiring within 30 days",
+        "trigger_sql": "SELECT COUNT(*) AS count, ROUND(SUM(di.current_stock * d.unit_cost), 2) AS value FROM drug_inventory di JOIN drugs d ON di.drug_id = d.drug_id WHERE julianday(di.expiry_date) - julianday('now') BETWEEN 0 AND 30",
+        "condition": "count > 0",
+        "severity": "Critical",
+        "subject": "ALERT: {count} drug batches expiring within 30 days — ₹{value} at risk",
+        "body_template": "{count} drug batches are expiring within 30 days. Total stock value at risk: ₹{value}. Immediate disposal and reorder action required."
+      },
+      {
+        "rule_id": "PHAR_002",
+        "name": "Below Reorder Threshold",
+        "description": "Drugs below reorder threshold",
+        "trigger_sql": "SELECT COUNT(*) AS count FROM drug_inventory WHERE current_stock < reorder_threshold",
+        "condition": "count > 10",
+        "severity": "High",
+        "subject": "ALERT: {count} drug items below reorder threshold",
+        "body_template": "{count} drug inventory items are below their reorder threshold. Please initiate purchase orders to avoid stockouts."
+      },
+      {
+        "rule_id": "PHAR_003",
+        "name": "Expired Stock Still Present",
+        "description": "Expired batches still in inventory",
+        "trigger_sql": "SELECT COUNT(*) AS count FROM drug_inventory WHERE julianday(expiry_date) - julianday('now') < 0 AND current_stock > 0",
+        "condition": "count > 0",
+        "severity": "Critical",
+        "subject": "URGENT: {count} expired drug batches still in active inventory",
+        "body_template": "{count} drug batches have passed their expiry date but still show stock. These must be quarantined and disposed of immediately."
+      }
+    ]
+  },
+
+  "patient": {
+    "enabled": true,
+    "recipients": ["patient-experience@hospital.local", "operations-manager@hospital.local"],
+    "rules": [
+      {
+        "rule_id": "PAT_001",
+        "name": "Critical SLA Breaches Today",
+        "description": "Critical SLA breaches in last 24 hours",
+        "trigger_sql": "SELECT COUNT(*) AS count FROM patient_complaints WHERE breach_severity = 'Critical' AND complaint_date >= DATE('now', '-1 day')",
+        "condition": "count > 0",
+        "severity": "Critical",
+        "subject": "ALERT: {count} Critical SLA breach(es) today — patient escalation required",
+        "body_template": "{count} patient complaints with Critical SLA breaches were filed today. These require immediate escalation to the Clinical Operations Manager."
+      },
+      {
+        "rule_id": "PAT_002",
+        "name": "Open Complaints Backlog",
+        "description": "Too many unresolved complaints",
+        "trigger_sql": "SELECT COUNT(*) AS count FROM patient_complaints WHERE resolution_status = 'Open'",
+        "condition": "count > 20",
+        "severity": "High",
+        "subject": "ALERT: {count} unresolved patient complaints in queue",
+        "body_template": "{count} patient complaints remain unresolved. Please review the patient support portal and clear the backlog."
+      }
+    ]
+  },
+
+  "dispatch": {
+    "enabled": true,
+    "recipients": ["logistics-manager@hospital.local", "operations-manager@hospital.local"],
+    "rules": [
+      {
+        "rule_id": "DISP_001",
+        "name": "Emergency Deliveries Delayed",
+        "description": "Emergency deliveries currently delayed",
+        "trigger_sql": "SELECT COUNT(*) AS count FROM delivery_records WHERE delivery_category = 'Emergency' AND delivery_status = 'Delayed'",
+        "condition": "count > 0",
+        "severity": "Critical",
+        "subject": "URGENT: {count} Emergency medical delivery/deliveries delayed",
+        "body_template": "{count} emergency medical deliveries are currently delayed. Immediate re-routing or vehicle reassignment is required."
+      },
+      {
+        "rule_id": "DISP_002",
+        "name": "SLA Breach Rate High",
+        "description": "Dispatch SLA breach rate in last 24h",
+        "trigger_sql": "SELECT ROUND(100.0 * SUM(CASE WHEN sla_breached=1 THEN 1 ELSE 0 END) / COUNT(*), 1) AS rate FROM delivery_records WHERE DATE(scheduled_datetime) >= DATE('now', '-1 day')",
+        "condition": "rate > 20",
+        "severity": "High",
+        "subject": "ALERT: Dispatch SLA breach rate is {rate}% in last 24h",
+        "body_template": "The dispatch SLA breach rate over the last 24 hours is {rate}%, exceeding the 20% threshold. Review route assignments and vehicle availability."
+      },
+      {
+        "rule_id": "DISP_003",
+        "name": "No Available Vehicles",
+        "description": "All vehicles of a critical type are deployed",
+        "trigger_sql": "SELECT COUNT(*) AS count FROM vehicles WHERE vehicle_type = 'Ambulance' AND available = 1",
+        "condition": "count = 0",
+        "severity": "Critical",
+        "subject": "URGENT: No ambulances currently available",
+        "body_template": "All ambulances are currently deployed. No emergency dispatch capacity available. Contact partner hospitals immediately."
+      }
+    ]
+  }
+}

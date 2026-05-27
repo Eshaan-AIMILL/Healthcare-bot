@@ -415,3 +415,195 @@
 2026-05-26 10:39:13 | INFO     | app.tools.text2sql:_execute_select:951 — Text2SQL returned 10 rows for: 'What is our on-time delivery rate for emergency medical dispatches, which routes have the highest SLA breach risk, and what is the recommended route optimisation for our next emergency delivery?'
 2026-05-26 10:39:13 | INFO     | app.agents.dispatch:dispatch_node:35 — Dispatch agent completed deterministic aggregate analysis.
 2026-05-26 10:39:13 | INFO     | app.agents.summarizer:summarizer_node:504 — Summarizer produced 760 char deterministic response.
+2026-05-26 20:46:53 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Which drugs are expiring?'
+2026-05-26 20:47:02 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='pharmacy' confidence=1.00
+2026-05-26 20:47:23 | DEBUG    | app.tools.text2sql:_execute_select:936 — Text2SQL generated: "SELECT drug_id, drug_name, expiry_date FROM drug_inventory WHERE current_stock <= reorder_threshold AND expiry_date < DATE('now', '1 month') LIMIT 50" | params={} | This query retrieves the IDs and names of drugs that are expiring within a month.
+2026-05-26 20:47:23 | ERROR    | app.tools.text2sql:run_text2sql:978 — Text2SQL execution failed: (sqlite3.OperationalError) no such column: drug_name
+[SQL: SELECT drug_id, drug_name, expiry_date FROM drug_inventory WHERE current_stock <= reorder_threshold AND expiry_date < DATE('now', '1 month') LIMIT 50]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-26 20:47:32 | INFO     | app.agents.pharmacy:pharmacy_node:63 — Pharmacy agent completed. expiry_alerts=0
+2026-05-26 20:47:59 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 882 char response.
+2026-05-26 20:47:59 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-26 20:47:59 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-26 20:47:59 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-26 21:01:28 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Which drugs are expiring?'
+2026-05-26 21:01:37 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='pharmacy' confidence=1.00
+2026-05-26 21:01:37 | DEBUG    | app.tools.text2sql:_execute_select:935 — Text2SQL generated: "WITH expiring AS (\n    SELECT d.drug_id,\n           d.drug_name,\n           d.generic_name,\n           d.category,\n           d.unit_cost,\n           di.batch_number,\n           di.expiry_date,\n           di.current_stock,\n           di.reorder_threshold,\n           di.average_daily_consumption,\n           CAST(julianday(di.expiry_date) - julianday(date('now')) AS INTEGER) AS days_until_expiry,\n           ROUND(di.current_stock * COALESCE(d.unit_cost, 0), 2) AS cost_exposure\n    FROM drug_inventory AS di\n    JOIN drugs AS d ON d.drug_id = di.drug_id\n    WHERE di.expiry_date >= date('now')\n      AND di.expiry_date < date('now', '+60 days')\n),\noverall AS (\n    SELECT COUNT(*) AS expiring_batch_count,\n           ROUND(COALESCE(SUM(cost_exposure), 0), 2) AS total_cost_exposure\n    FROM expiring\n)\nSELECT overall.expiring_batch_count,\n       overall.total_cost_exposure,\n       expiring.drug_id,\n       expiring.drug_name,\n       expiring.batch_number,\n       expiring.expiry_date,\n       expiring.days_until_expiry,\n       expiring.current_stock,\n       expiring.unit_cost,\n       expiring.cost_exposure,\n       expiring.reorder_threshold,\n       expiring.average_daily_consumption\nFROM overall\nLEFT JOIN expiring ON 1 = 1\nORDER BY expiring.expiry_date ASC, expiring.cost_exposure DESC\nLIMIT 20" | params={} | Drug batches expiring in the next 60 days and total inventory cost exposure.
+2026-05-26 21:01:37 | INFO     | app.tools.text2sql:_execute_select:939 — Text2SQL returned 20 rows for: 'Which drugs are expiring?'
+2026-05-26 21:01:37 | INFO     | app.agents.pharmacy:pharmacy_node:31 — Pharmacy agent completed deterministic expiry analysis.
+2026-05-26 21:01:37 | INFO     | app.agents.summarizer:summarizer_node:503 — Summarizer produced 1166 char deterministic response.
+2026-05-26 21:01:38 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-26 21:02:08 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Which items need immediate action?'
+2026-05-26 21:02:24 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='dispatch' confidence=0.80
+2026-05-26 21:02:41 | DEBUG    | app.tools.text2sql:_execute_select:935 — Text2SQL generated: 'SELECT * FROM patient_complaints WHERE sla_breached = :sla_breached LIMIT 50' | params={'sla_breached': 'true'} | This query retrieves the first 50 patient complaints where the SLA has been breached.
+2026-05-26 21:02:42 | INFO     | app.tools.text2sql:_execute_select:939 — Text2SQL returned 0 rows for: 'Which items need immediate action?'
+2026-05-26 21:02:55 | INFO     | app.agents.dispatch:dispatch_node:63 — Dispatch agent completed. sla_risk=None
+2026-05-26 21:03:13 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 631 char response.
+2026-05-26 21:03:13 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-26 21:40:46 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Which departments have worst SLA compliance?'
+2026-05-26 21:41:06 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='patient' confidence=0.80
+2026-05-26 21:41:16 | DEBUG    | app.tools.text2sql:_execute_select:937 — Text2SQL generated: "SELECT DISTINCT department FROM patient_complaints WHERE sla_breached = 'yes' LIMIT 50" | params={} | This query selects the unique departments where SLA was breached, limiting results to 50 rows.
+2026-05-26 21:41:16 | ERROR    | app.tools.text2sql:run_text2sql:979 — Text2SQL execution failed: (sqlite3.OperationalError) no such column: department
+[SQL: SELECT DISTINCT department FROM patient_complaints WHERE sla_breached = 'yes' LIMIT 50]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-26 21:41:20 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 4 chunks for domain='patient' (distances: [0.361, 0.402, 0.456, 0.482])
+2026-05-26 21:41:38 | INFO     | app.agents.patient:patient_node:70 — Patient agent completed. sla_breached=None
+2026-05-26 21:41:52 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 612 char response.
+2026-05-26 21:41:52 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-26 21:41:52 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-26 21:41:52 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-26 21:42:22 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Show me all delays from last 7 days'
+2026-05-26 21:42:28 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='dispatch' confidence=0.80
+2026-05-26 21:42:36 | DEBUG    | app.tools.text2sql:_execute_select:937 — Text2SQL generated: "SELECT * FROM delivery_records WHERE actual_delivery_datetime >= datetime('now', '-7 days')" | params={} | This query retrieves all delivery records with an actual delivery date within the last 7 days.
+2026-05-26 21:42:36 | INFO     | app.tools.text2sql:_execute_select:941 — Text2SQL returned 105 rows for: 'Show me all delays from last 7 days'
+2026-05-26 21:43:20 | INFO     | app.agents.dispatch:dispatch_node:63 — Dispatch agent completed. sla_risk=None
+2026-05-26 21:43:59 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1113 char response.
+2026-05-26 21:43:59 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-26 21:45:58 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Which departments have worst SLA compliance?'
+2026-05-26 21:46:04 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='patient' confidence=0.80
+2026-05-26 21:46:17 | DEBUG    | app.tools.text2sql:_execute_select:937 — Text2SQL generated: 'SELECT department, COUNT(*) as count FROM patient_complaints GROUP BY department ORDER BY sla_breached DESC LIMIT 50' | params={} | This query retrieves the top 50 departments with the worst SLA compliance by counting the number of complaints in each department and sorting them in descending order based on whether SLA was breached.
+2026-05-26 21:46:17 | ERROR    | app.tools.text2sql:run_text2sql:979 — Text2SQL execution failed: (sqlite3.OperationalError) no such column: department
+[SQL: SELECT department, COUNT(*) as count FROM patient_complaints GROUP BY department ORDER BY sla_breached DESC LIMIT 50]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-26 21:46:20 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 4 chunks for domain='patient' (distances: [0.361, 0.402, 0.456, 0.482])
+2026-05-26 21:46:26 | INFO     | app.agents.patient:patient_node:70 — Patient agent completed. sla_breached=None
+2026-05-26 21:46:38 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 580 char response.
+2026-05-26 21:46:38 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-26 21:49:17 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Show me all delays from last 7 days'
+2026-05-26 21:49:23 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='dispatch' confidence=0.80
+2026-05-26 21:49:33 | DEBUG    | app.tools.text2sql:_execute_select:937 — Text2SQL generated: "SELECT * FROM delivery_records WHERE actual_delivery_datetime >= datetime('now', '-7 days') LIMIT 50" | params={} | This query retrieves the most recent 50 delivery records where the actual delivery date is within the last 7 days.
+2026-05-26 21:49:34 | INFO     | app.tools.text2sql:_execute_select:941 — Text2SQL returned 50 rows for: 'Show me all delays from last 7 days'
+2026-05-26 21:50:21 | INFO     | app.agents.dispatch:dispatch_node:63 — Dispatch agent completed. sla_risk=None
+2026-05-26 21:50:49 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Which departments have worst SLA compliance?'
+2026-05-26 21:50:55 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='patient' confidence=0.80
+2026-05-26 21:51:18 | DEBUG    | app.tools.text2sql:_execute_select:946 — Text2SQL generated: 'SELECT T1.department, AVG(T2.sla_breached) AS sla_compliance FROM appointments AS T1 INNER JOIN patient_complaints AS T2 ON T1.appointment_id = T2.appointment_id GROUP BY T1.department ORDER BY sla_compliance DESC LIMIT 50' | params={} | This query selects the departments with the worst SLA compliance by averaging the number of appointments where SLA was breached.
+2026-05-26 21:51:18 | INFO     | app.tools.text2sql:_execute_select:950 — Text2SQL returned 10 rows for: 'Which departments have worst SLA compliance?'
+2026-05-26 21:51:19 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 4 chunks for domain='patient' (distances: [0.361, 0.402, 0.456, 0.482])
+2026-05-26 21:51:32 | INFO     | app.agents.patient:patient_node:70 — Patient agent completed. sla_breached=None
+2026-05-26 21:51:57 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 972 char response.
+2026-05-26 21:51:57 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-26 21:52:34 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Which departments have worst SLA compliance?'
+2026-05-26 21:52:39 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='patient' confidence=0.80
+2026-05-26 21:52:56 | DEBUG    | app.tools.text2sql:_execute_select:946 — Text2SQL generated: 'SELECT T1.department, AVG(T2.sla_breached) AS sla_compliance FROM appointments AS T1 INNER JOIN patient_complaints AS T2 ON T1.appointment_id = T2.appointment_id GROUP BY T1.department ORDER BY sla_compliance DESC LIMIT 50' | params={} | This query selects the departments with the worst SLA compliance by averaging the number of appointments where SLA was breached.
+2026-05-26 21:52:56 | INFO     | app.tools.text2sql:_execute_select:950 — Text2SQL returned 10 rows for: 'Which departments have worst SLA compliance?'
+2026-05-26 21:52:56 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 4 chunks for domain='patient' (distances: [0.361, 0.402, 0.456, 0.482])
+2026-05-26 21:53:09 | INFO     | app.agents.patient:patient_node:70 — Patient agent completed. sla_breached=None
+2026-05-26 21:53:35 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1119 char response.
+2026-05-26 21:53:35 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-26 21:54:07 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Show me all delays from last 7 days'
+2026-05-26 21:54:12 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='dispatch' confidence=0.80
+2026-05-26 21:54:23 | DEBUG    | app.tools.text2sql:_execute_select:946 — Text2SQL generated: "SELECT * FROM delivery_records WHERE actual_delivery_datetime > datetime('now', '-7 day') LIMIT 50" | params={} | This query retrieves the most recent 50 delivery records where the actual delivery date is within the last 7 days.
+2026-05-26 21:54:23 | INFO     | app.tools.text2sql:_execute_select:950 — Text2SQL returned 50 rows for: 'Show me all delays from last 7 days'
+2026-05-26 21:55:06 | INFO     | app.agents.dispatch:dispatch_node:63 — Dispatch agent completed. sla_risk=None
+2026-05-26 21:55:38 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 992 char response.
+2026-05-26 21:55:38 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 14:47:40 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 14:48:10 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 14:48:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 16 Critical compliance violation(s) unresolved
+2026-05-27 14:48:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 16 Critical compliance violation(s) unresolved → ['compliance-officer@hospital.local', 'cco@hospital.local']
+2026-05-27 14:48:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk
+2026-05-27 14:48:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 14:48:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 87 drug items below reorder threshold
+2026-05-27 14:48:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 87 drug items below reorder threshold → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 14:48:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 200 expired drug batches still in active inventory
+2026-05-27 14:48:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 200 expired drug batches still in active inventory → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 14:48:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 49 unresolved patient complaints in queue
+2026-05-27 14:48:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 49 unresolved patient complaints in queue → ['patient-experience@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 14:48:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 93 Emergency medical delivery/deliveries delayed
+2026-05-27 14:48:10 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 93 Emergency medical delivery/deliveries delayed → ['logistics-manager@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 14:48:10 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 6 alert(s) fired across 5 domains
+2026-05-27 14:48:10 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 6 alert(s) fired
+2026-05-27 14:49:15 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'What is our overall claim rejection rate this month, which ICD-10 codes are driving the most rejections, and what correction actions should the billing team take immediately?'
+2026-05-27 14:49:17 | ERROR    | app.api.chat:chat_completions:124 — Graph execution failed: All connection attempts failed
+2026-05-27 14:49:18 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Show me all Critical HIPAA violations logged in the last 30 days, classify each by regulation section, and recommend resolution actions.'
+2026-05-27 14:49:20 | ERROR    | app.api.chat:chat_completions:124 — Graph execution failed: All connection attempts failed
+2026-05-27 14:49:21 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Which drugs are expiring within 60 days, what is our total cost exposure, and which items need an emergency reorder right now?'
+2026-05-27 14:49:24 | ERROR    | app.api.chat:chat_completions:124 — Graph execution failed: All connection attempts failed
+2026-05-27 14:49:25 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'How many appointment complaints breached SLA this week, what is the average delay in minutes, and which patients are eligible for compensation?'
+2026-05-27 14:49:27 | ERROR    | app.api.chat:chat_completions:124 — Graph execution failed: All connection attempts failed
+2026-05-27 14:49:28 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'What is our on-time delivery rate for emergency medical dispatches, which routes have the highest SLA breach risk, and what is the recommended route optimisation for our next emergency delivery?'
+2026-05-27 14:49:31 | ERROR    | app.api.chat:chat_completions:124 — Graph execution failed: All connection attempts failed
+2026-05-27 15:00:14 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 15:00:44 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 15:00:44 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 16 Critical compliance violation(s) unresolved
+2026-05-27 15:00:44 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 16 Critical compliance violation(s) unresolved → ['compliance-officer@hospital.local', 'cco@hospital.local']
+2026-05-27 15:00:44 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk
+2026-05-27 15:00:44 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 15:00:44 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 87 drug items below reorder threshold
+2026-05-27 15:00:44 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 87 drug items below reorder threshold → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 15:00:44 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 200 expired drug batches still in active inventory
+2026-05-27 15:00:44 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 200 expired drug batches still in active inventory → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 15:00:44 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 49 unresolved patient complaints in queue
+2026-05-27 15:00:44 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 49 unresolved patient complaints in queue → ['patient-experience@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 15:00:44 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 93 Emergency medical delivery/deliveries delayed
+2026-05-27 15:00:44 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 93 Emergency medical delivery/deliveries delayed → ['logistics-manager@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 15:00:44 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 6 alert(s) fired across 5 domains
+2026-05-27 15:00:44 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 6 alert(s) fired
+2026-05-27 15:00:56 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 15:01:26 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 15:01:26 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 16 Critical compliance violation(s) unresolved
+2026-05-27 15:01:26 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 16 Critical compliance violation(s) unresolved → ['compliance-officer@hospital.local', 'cco@hospital.local']
+2026-05-27 15:01:26 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk
+2026-05-27 15:01:26 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 15:01:26 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 87 drug items below reorder threshold
+2026-05-27 15:01:26 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 87 drug items below reorder threshold → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 15:01:26 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 200 expired drug batches still in active inventory
+2026-05-27 15:01:26 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 200 expired drug batches still in active inventory → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 15:01:26 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 49 unresolved patient complaints in queue
+2026-05-27 15:01:26 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 49 unresolved patient complaints in queue → ['patient-experience@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 15:01:26 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 93 Emergency medical delivery/deliveries delayed
+2026-05-27 15:01:26 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 93 Emergency medical delivery/deliveries delayed → ['logistics-manager@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 15:01:26 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 6 alert(s) fired across 5 domains
+2026-05-27 15:01:26 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 6 alert(s) fired
+2026-05-27 15:02:37 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'What is our claim rejection rate this month broken down by payer, and which payer has the worst performance?'
+2026-05-27 15:02:39 | ERROR    | app.api.chat:chat_completions:124 — Graph execution failed: All connection attempts failed
+2026-05-27 15:02:40 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 15:02:40 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 15:02:40 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 15:03:53 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 15:04:24 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 15:04:24 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 16 Critical compliance violation(s) unresolved
+2026-05-27 15:04:24 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 16 Critical compliance violation(s) unresolved → ['compliance-officer@hospital.local', 'cco@hospital.local']
+2026-05-27 15:04:24 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk
+2026-05-27 15:04:24 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 182 drug batches expiring within 30 days — ₹1250875168.19 at risk → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 15:04:24 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 87 drug items below reorder threshold
+2026-05-27 15:04:24 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 87 drug items below reorder threshold → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 15:04:24 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 200 expired drug batches still in active inventory
+2026-05-27 15:04:24 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 200 expired drug batches still in active inventory → ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local']
+2026-05-27 15:04:24 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 49 unresolved patient complaints in queue
+2026-05-27 15:04:24 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: ALERT: 49 unresolved patient complaints in queue → ['patient-experience@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 15:04:24 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 93 Emergency medical delivery/deliveries delayed
+2026-05-27 15:04:24 | INFO     | app.alerts.email_service:_evaluate_domain_rules:211 — [DRY RUN] Would send: URGENT: 93 Emergency medical delivery/deliveries delayed → ['logistics-manager@hospital.local', 'operations-manager@hospital.local']
+2026-05-27 15:04:24 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 6 alert(s) fired across 5 domains
+2026-05-27 15:04:24 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 6 alert(s) fired
+2026-05-27 15:04:25 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'What is our claim rejection rate this month broken down by payer, and which payer has the worst performance?'
+2026-05-27 15:05:20 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='billing' confidence=0.90
+2026-05-27 15:05:42 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT payer_name, COUNT(*) AS total_claims, SUM(CASE WHEN claim_status = 'Rejected' THEN 1 ELSE 0 END) AS rejected_claims FROM billing_claims WHERE DATE(claim_date) >= DATE('now', '-30 days') GROUP BY payer_name ORDER BY rejected_claims DESC LIMIT 50" | params=[] | This query calculates the claim rejection rate for each payer over the last month and orders them by the number of rejected claims in descending order.
+2026-05-27 15:05:42 | INFO     | app.tools.text2sql:run_text2sql:161 — Text2SQL returned 8 rows for: 'What is our claim rejection rate this month broken down by payer, and which payer has the worst performance?'
+2026-05-27 15:05:56 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 5 chunks for domain='billing' (distances: [0.305, 0.371, 0.41, 0.457, 0.522])
+2026-05-27 15:06:18 | INFO     | app.agents.billing:billing_node:91 — Billing agent completed. rejection_risk=None
+2026-05-27 15:06:42 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 982 char response.
+2026-05-27 15:06:42 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 15:07:13 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'What is our emergency delivery on-time rate this month and which routes have the worst SLA compliance?'
+2026-05-27 15:07:19 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='dispatch' confidence=0.80
+2026-05-27 15:07:43 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT COUNT(*) AS on_time_rate, r.route_id FROM delivery_records dr JOIN routes r ON dr.route_id = r.route_id WHERE dr.delivery_category = 'Emergency' AND dr.sla_breached = 0 AND DATE('now', '-30 days') <= dr.actual_delivery_datetime GROUP BY r.route_id ORDER BY on_time_rate DESC LIMIT 10" | params=[] | This query calculates the on-time rate of emergency deliveries for the last month and identifies the routes with the worst SLA compliance.
+2026-05-27 15:07:43 | INFO     | app.tools.text2sql:run_text2sql:161 — Text2SQL returned 10 rows for: 'What is our emergency delivery on-time rate this month and which routes have the worst SLA compliance?'
+2026-05-27 15:08:14 | INFO     | app.agents.dispatch:dispatch_node:89 — Dispatch agent completed. assessments=0 critical=0
+2026-05-27 15:08:38 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 895 char response.
+2026-05-27 15:08:38 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 15:09:01 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Everything looks fine on the surface but I want you to find me the 3 biggest hidden risks in our operations right now that my team might be overlooking.'
+2026-05-27 15:09:07 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='compliance' confidence=0.80
+2026-05-27 15:09:31 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql="SELECT af.process_id, cp.department, af.violation_type, af.severity FROM audit_findings af JOIN clinical_processes cp ON af.process_id = cp.process_id WHERE af.resolution_status = 'Open' AND af.severity IN ('Critical', 'Major') ORDER BY af.severity DESC LIMIT 3" | params=[] | This query identifies the top 3 critical or major audit findings that are currently unresolved, indicating potential hidden risks in operations.
+2026-05-27 15:09:31 | INFO     | app.tools.text2sql:run_text2sql:161 — Text2SQL returned 3 rows for: 'Everything looks fine on the surface but I want you to find me the 3 biggest hidden risks in our operations right now that my team might be overlooking.'
+2026-05-27 15:09:31 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 5 chunks for domain='compliance' (distances: [0.419, 0.423, 0.426, 0.462, 0.463])
+2026-05-27 15:09:48 | INFO     | app.agents.compliance:compliance_node:73 — Compliance agent completed. severity=Major
+2026-05-27 15:10:07 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1016 char response.
+2026-05-27 15:10:07 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.
+2026-05-27 15:19:00 | INFO     | app.api.chat:chat_completions:118 — Processing query: 'Show me all patient data including full_name and insurance_provider.'
+2026-05-27 15:19:20 | INFO     | app.agents.planner:planner_node:40 — Planner → intent='patient' confidence=0.80
+2026-05-27 15:19:31 | DEBUG    | app.tools.text2sql:run_text2sql:136 — Text2SQL | sql='SELECT patient_id, full_name, insurance_provider FROM patients' | params=[] | Retrieving patient information with name and insurance provider.
+2026-05-27 15:19:31 | INFO     | app.tools.text2sql:run_text2sql:161 — Text2SQL returned 1500 rows for: 'Show me all patient data including full_name and insurance_provider.'
+2026-05-27 15:19:36 | INFO     | app.tools.rag_retriever:retrieve_context:56 — RAG retrieved 4 chunks for domain='patient' (distances: [0.449, 0.452, 0.504, 0.508])
+2026-05-27 15:20:31 | INFO     | app.agents.patient:patient_node:70 — Patient agent completed. sla_breached=None
+2026-05-27 15:21:14 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 1542 char response.
+2026-05-27 15:21:15 | INFO     | app.api.chat:chat_completions:98 — Handled metadata prompt without graph execution.

@@ -1,4 +1,8 @@
-
+"""
+Portal API Endpoints
+One endpoint per domain — feeds the 5 React portal tabs directly from SQLite.
+All queries are fully parameterised.
+"""
 from datetime import date, timedelta
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import text
@@ -364,3 +368,214 @@ async def get_vehicle_availability(
     """), params)
     rows = [dict(r._mapping) for r in result.fetchall()]
     return {"vehicles": rows}
+
+
+# ── Dispatch Production Endpoints ─────────────────────────────────────────────
+
+from app.agents.dispatch_engine import (
+    run_dispatch_assessment,
+    sequence_multi_stop,
+    score_route_options,
+    check_driver_fatigue,
+    compute_adjusted_eta,
+    get_traffic_factor,
+    predict_sla_breach,
+    SLA_WINDOWS,
+    VEHICLE_COMPATIBILITY,
+)
+from datetime import datetime as _dt
+
+
+@router.get("/dispatch/assessment/{delivery_id}")
+async def get_delivery_assessment(
+    delivery_id: str,
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """
+    Full production-grade assessment for a single delivery.
+    Runs all 6 engine checks: compatibility, ETA, SLA prediction,
+    fatigue, trade-off scoring.
+    """
+    result = await run_dispatch_assessment(delivery_id, db)
+    return result
+
+
+@router.get("/dispatch/in-transit-risks")
+async def get_in_transit_risks(
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """
+    Proactive SLA breach prediction for all InTransit deliveries.
+    Identifies deliveries that WILL breach before they do.
+    """
+    result = await db.execute(text("""
+        SELECT
+            dr.delivery_id,
+            dr.delivery_category,
+            dr.scheduled_datetime,
+            dr.sla_window_minutes,
+            dr.delivery_status,
+            r.estimated_duration_minutes,
+            r.route_type,
+            r.origin,
+            r.destination,
+            v.vehicle_type,
+            v.registration
+        FROM delivery_records dr
+        JOIN routes r   ON dr.route_id   = r.route_id
+        JOIN vehicles v ON dr.vehicle_id = v.vehicle_id
+        WHERE dr.delivery_status IN ('InTransit', 'Scheduled')
+        LIMIT 100
+    """))
+    rows = [dict(r._mapping) for r in result.fetchall()]
+
+    now = _dt.now()
+    predictions = []
+    for row in rows:
+        try:
+            scheduled = _dt.fromisoformat(str(row["scheduled_datetime"]))
+        except Exception:
+            continue
+
+        pred = predict_sla_breach(
+            scheduled_datetime=scheduled,
+            current_datetime=now,
+            base_duration_minutes=row["estimated_duration_minutes"],
+            route_type=row["route_type"],
+            sla_window_minutes=row["sla_window_minutes"],
+            delivery_status=row["delivery_status"],
+        )
+        predictions.append({
+            "delivery_id":       row["delivery_id"],
+            "delivery_category": row["delivery_category"],
+            "origin":            row["origin"],
+            "destination":       row["destination"],
+            "vehicle_type":      row["vehicle_type"],
+            "registration":      row["registration"],
+            "delivery_status":   row["delivery_status"],
+            **pred,
+        })
+
+    at_risk = [p for p in predictions if p.get("will_breach")]
+    return {
+        "summary": {
+            "total_active":   len(predictions),
+            "will_breach":    len(at_risk),
+            "safe":           len(predictions) - len(at_risk),
+        },
+        "at_risk":  sorted(at_risk, key=lambda x: x.get("breach_margin_minutes", 0)),
+        "all":      predictions,
+    }
+
+
+@router.get("/dispatch/traffic-schedule")
+async def get_traffic_schedule() -> dict:
+    """
+    Returns the time-of-day traffic factor schedule for all route types.
+    Useful for dispatch planning — shows worst and best times to dispatch.
+    """
+    from app.agents.dispatch_engine import TRAFFIC_SCHEDULE
+    schedule_summary = {}
+    for route_type, hours in TRAFFIC_SCHEDULE.items():
+        schedule_summary[route_type] = [
+            {
+                "hour":          h,
+                "time_label":    f"{h:02d}:00",
+                "traffic_factor": f,
+                "condition": (
+                    "Severe" if f >= 1.7 else
+                    "Heavy"  if f >= 1.4 else
+                    "Moderate" if f >= 1.1 else
+                    "Light"
+                ),
+            }
+            for h, f in sorted(hours.items())
+        ]
+    return {"traffic_schedule": schedule_summary}
+
+
+@router.post("/dispatch/multi-stop")
+async def plan_multi_stop(
+    vehicle_id: str = Query(...),
+    delivery_ids: str = Query(..., description="Comma-separated delivery IDs"),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """
+    Plan an optimal multi-stop sequence for a vehicle.
+    Enforces priority order: Emergency → Refrigerated → Routine.
+    Detects SLA violations per stop with cumulative ETA.
+    """
+    ids = [d.strip() for d in delivery_ids.split(",") if d.strip()]
+    if not ids:
+        return {"error": "No delivery IDs provided"}
+
+    # Fetch vehicle info
+    v_result = await db.execute(
+        text("SELECT * FROM vehicles WHERE vehicle_id = :vid"),
+        {"vid": vehicle_id},
+    )
+    vehicle_row = v_result.mappings().fetchone()
+    if not vehicle_row:
+        return {"error": f"Vehicle {vehicle_id} not found"}
+
+    vehicle = dict(vehicle_row)
+
+    # Fetch delivery details
+    stops = []
+    for did in ids:
+        d_result = await db.execute(text("""
+            SELECT
+                dr.delivery_id,
+                dr.delivery_category,
+                dr.sla_window_minutes,
+                dr.estimated_cost,
+                r.destination,
+                r.estimated_duration_minutes,
+                r.route_type
+            FROM delivery_records dr
+            JOIN routes r ON dr.route_id = r.route_id
+            WHERE dr.delivery_id = :did
+        """), {"did": did})
+        row = d_result.mappings().fetchone()
+        if row:
+            stops.append(dict(row))
+
+    result = sequence_multi_stop(
+        stops=stops,
+        vehicle_type=vehicle["vehicle_type"],
+        vehicle_capacity_kg=vehicle["capacity_kg"],
+    )
+    return {
+        "vehicle_id":    vehicle_id,
+        "vehicle_type":  vehicle["vehicle_type"],
+        "capacity_kg":   vehicle["capacity_kg"],
+        **result,
+    }
+
+
+@router.get("/dispatch/route-options")
+async def get_route_trade_off(
+    origin: str = Query(...),
+    destination: str = Query(...),
+    delivery_category: str = Query(default="Routine"),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """
+    Returns cheapest / fastest / safest-SLA route options between two locations.
+    """
+    now_hour = _dt.now().hour
+    result = await db.execute(text("""
+        SELECT route_id, origin, destination, distance_km,
+               estimated_duration_minutes, route_type,
+               1500.0 AS estimated_cost
+        FROM routes
+        WHERE origin = :origin AND destination = :destination
+        ORDER BY estimated_duration_minutes ASC
+        LIMIT 5
+    """), {"origin": origin, "destination": destination})
+
+    routes = [dict(r._mapping) for r in result.fetchall()]
+    if not routes:
+        return {"error": f"No routes found from '{origin}' to '{destination}'"}
+
+    return score_route_options(routes, delivery_category, now_hour)

@@ -1,17 +1,48 @@
+import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Set ChromaDB telemetry flags at import time via os.environ
+# These are NOT Pydantic settings — ChromaDB reads them directly
+os.environ.setdefault("ANONYMIZED_TELEMETRY", "False")
+os.environ.setdefault("CHROMA_TELEMETRY", "False")
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",          # ← silently ignore any unknown env vars
+    )
 
+    # ── LLM ──────────────────────────────────────────────────────────────────
     ollama_base_url: str = "http://localhost:11434"
-    ollama_model: str = "llama3.1:8b-instruct-q8_0"
-    database_url: str = "sqlite+aiosqlite:///./data/healthcare.db"
+    ollama_model:    str = "llama3.1:8b-instruct-q8_0"
+
+    # ── Database ──────────────────────────────────────────────────────────────
+    database_url:       str = "sqlite+aiosqlite:///./data/healthcare.db"
     chroma_persist_dir: str = "./data/chroma"
+
+    # ── Logging ───────────────────────────────────────────────────────────────
     log_level: str = "INFO"
-    seed_rows_per_table: int = 1500
-    rag_chunk_size: int = 800
+
+    # ── Seeder ────────────────────────────────────────────────────────────────
+    seed_rows_per_table: int = 2000
+
+    # ── RAG ───────────────────────────────────────────────────────────────────
+    rag_chunk_size:    int = 800
     rag_chunk_overlap: int = 120
+
+    # ── SMTP / Email Alerts ───────────────────────────────────────────────────
+    smtp_host:     str  = "smtp.gmail.com"
+    smtp_port:     int  = 587
+    smtp_user:     str  = ""
+    smtp_password: str  = ""
+    smtp_from:     str  = "healthbot-alerts@hospital.local"
+    smtp_use_tls:  bool = True
+
+    # ── Alert Scheduler ───────────────────────────────────────────────────────
+    alert_emails_enabled:         bool = False
+    alert_check_interval_minutes: int  = 60
 
 
 settings = Settings()

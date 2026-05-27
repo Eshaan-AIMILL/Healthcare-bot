@@ -1,0 +1,301 @@
+{
+  "database": "healthcare.db",
+  "engine": "SQLite",
+  "description": "Local healthcare operations database covering billing, compliance, pharmacy, patient support, and medical dispatch domains.",
+  "tables": {
+    "patients": {
+      "description": "Master patient registry. One row per registered patient.",
+      "primary_key": "patient_id",
+      "columns": {
+        "patient_id":              { "type": "TEXT",    "description": "Unique patient identifier. Format: PAT000001", "example": "PAT000001" },
+        "full_name":               { "type": "TEXT",    "description": "Patient full name", "example": "Priya Sharma" },
+        "date_of_birth":           { "type": "DATE",    "description": "Date of birth in YYYY-MM-DD format", "example": "1985-03-14" },
+        "gender":                  { "type": "TEXT",    "description": "Gender: Male | Female | Other", "example": "Female" },
+        "blood_type":              { "type": "TEXT",    "description": "ABO blood group: A+, A-, B+, B-, AB+, AB-, O+, O-", "example": "O+" },
+        "insurance_provider":      { "type": "TEXT",    "description": "Name of the health insurance company", "example": "Apollo Munich Health Insurance" },
+        "insurance_policy_number": { "type": "TEXT",    "description": "Policy number issued by the insurer", "example": "POL-4521-ABCDEF" },
+        "patient_tier":            { "type": "TEXT",    "description": "Service tier: Standard | Premium | VIP. Affects SLA thresholds and compensation rules.", "example": "Premium" },
+        "address":                 { "type": "TEXT",    "description": "Residential address", "example": "42 Nehru Place, New Delhi" },
+        "phone":                   { "type": "TEXT",    "description": "Contact phone number", "example": "+91-9876543210" },
+        "created_at":              { "type": "DATETIME","description": "Record creation timestamp", "example": "2024-01-15 09:30:00" }
+      },
+      "relationships": {
+        "encounters":          "One patient → many encounters (via patient_id)",
+        "appointments":        "One patient → many appointments (via patient_id)",
+        "patient_complaints":  "One patient → many complaints (via patient_id)"
+      },
+      "common_filters": [
+        "patient_tier = 'VIP'",
+        "insurance_provider = 'Apollo Munich Health Insurance'",
+        "gender = 'Female'"
+      ]
+    },
+
+    "encounters": {
+      "description": "Clinical encounter records — each time a patient is seen by a physician. Links to billing claims.",
+      "primary_key": "encounter_id",
+      "foreign_keys": { "patient_id": "patients.patient_id" },
+      "columns": {
+        "encounter_id":               { "type": "TEXT", "description": "Unique encounter ID. Format: ENC000001", "example": "ENC000001" },
+        "patient_id":                 { "type": "TEXT", "description": "Foreign key to patients table", "example": "PAT000001" },
+        "encounter_date":             { "type": "DATE", "description": "Date the encounter occurred", "example": "2024-06-15" },
+        "department":                 { "type": "TEXT", "description": "Hospital department: Cardiology | Oncology | Orthopaedics | General Medicine | Emergency | Neurology | Dermatology | Gynaecology | Paediatrics | Radiology", "example": "Cardiology" },
+        "attending_physician":        { "type": "TEXT", "description": "Name of the treating physician", "example": "Dr. Ramesh Gupta" },
+        "primary_diagnosis_icd10":    { "type": "TEXT", "description": "Primary diagnosis ICD-10-CM code (e.g. I10, J06.9, E11.9). This is the MAIN code used for billing.", "example": "I10" },
+        "secondary_diagnosis_icd10":  { "type": "TEXT", "description": "Secondary/comorbidity ICD-10 code. May be NULL.", "example": "E11.9" },
+        "diagnosis_description":      { "type": "TEXT", "description": "Plain-language description of the primary diagnosis", "example": "Essential (primary) hypertension" }
+      },
+      "relationships": {
+        "patients":       "Many encounters → one patient (via patient_id)",
+        "billing_claims": "One encounter → many billing claims (via encounter_id)"
+      }
+    },
+
+    "billing_claims": {
+      "description": "Insurance billing claims submitted per encounter. Each claim has one CPT procedure code and links to an encounter with its ICD-10 diagnosis code.",
+      "primary_key": "claim_id",
+      "foreign_keys": {
+        "encounter_id": "encounters.encounter_id",
+        "patient_id":   "patients.patient_id"
+      },
+      "columns": {
+        "claim_id":             { "type": "TEXT",    "description": "Unique claim ID. Format: CLM000001", "example": "CLM000001" },
+        "encounter_id":         { "type": "TEXT",    "description": "Foreign key to encounters table", "example": "ENC000001" },
+        "patient_id":           { "type": "TEXT",    "description": "Foreign key to patients table", "example": "PAT000001" },
+        "cpt_code":             { "type": "TEXT",    "description": "CPT procedure code billed (e.g. 99213, 99214, 93000, 71046)", "example": "99214" },
+        "procedure_description":{ "type": "TEXT",    "description": "Plain-language description of the billed procedure", "example": "Office visit, established patient, moderate complexity" },
+        "claim_amount":         { "type": "REAL",    "description": "Billed amount in Indian Rupees (INR)", "example": 4500.00 },
+        "claim_date":           { "type": "DATE",    "description": "Date the claim was submitted", "example": "2024-06-16" },
+        "payer_name":           { "type": "TEXT",    "description": "Insurance company receiving the claim", "example": "Star Health Insurance" },
+        "claim_status":         { "type": "TEXT",    "description": "Current status: Pending | Approved | Rejected | UnderReview", "example": "Rejected" },
+        "rejection_reason":     { "type": "TEXT",    "description": "Free-text reason provided by the payer. NULL if not rejected.", "example": "Modifier -25 missing for same-day E&M" },
+        "has_coding_error":     { "type": "INTEGER", "description": "Boolean flag: 1 = coding error detected, 0 = clean. ~20% of claims have errors.", "example": 1 },
+        "error_type":           { "type": "TEXT",    "description": "Type of coding error: CodeMismatch | MissingModifier | Unbundling | Upcoding. NULL if no error.", "example": "MissingModifier" }
+      },
+      "useful_aggregations": [
+        "COUNT(*) WHERE claim_status = 'Rejected' — total rejected claims",
+        "SUM(claim_amount) WHERE claim_status = 'Pending' — pending revenue at risk",
+        "COUNT(*) WHERE has_coding_error = 1 — coding error volume",
+        "GROUP BY error_type — breakdown of error categories",
+        "GROUP BY payer_name, claim_status — rejection rate by payer"
+      ]
+    },
+
+    "clinical_processes": {
+      "description": "Records of clinical procedures and administrative processes subject to compliance audit. Covers consent, documentation, protocol adherence.",
+      "primary_key": "process_id",
+      "columns": {
+        "process_id":                 { "type": "TEXT",    "description": "Unique process ID. Format: PRC000001", "example": "PRC000001" },
+        "process_type":               { "type": "TEXT",    "description": "Type of clinical process: Surgical Procedure | Patient Admission | Drug Administration | Blood Transfusion | ICU Transfer | Discharge Process | Radiology Order | Consent Procedure", "example": "Surgical Procedure" },
+        "department":                 { "type": "TEXT",    "description": "Department where process occurred", "example": "Oncology" },
+        "staff_id":                   { "type": "TEXT",    "description": "ID of responsible staff member", "example": "STF0042" },
+        "staff_name":                 { "type": "TEXT",    "description": "Name of responsible staff member", "example": "Dr. Anita Verma" },
+        "procedure_date":             { "type": "DATE",    "description": "Date the process took place", "example": "2024-05-20" },
+        "patient_consent_obtained":   { "type": "INTEGER", "description": "Boolean: 1 = consent obtained, 0 = consent MISSING (JCI PFR.4 violation risk)", "example": 0 },
+        "documentation_complete":     { "type": "INTEGER", "description": "Boolean: 1 = all documentation filed, 0 = documentation GAP (JCI COP.1 violation risk)", "example": 0 },
+        "protocol_followed":          { "type": "INTEGER", "description": "Boolean: 1 = correct protocol followed, 0 = DEVIATION (SOP violation risk)", "example": 1 },
+        "incident_reported":          { "type": "INTEGER", "description": "Boolean: 1 = incident report filed, 0 = not reported", "example": 0 }
+      },
+      "relationships": {
+        "audit_findings": "One process → many findings (via process_id)"
+      }
+    },
+
+    "audit_findings": {
+      "description": "Compliance audit results linked to clinical processes. Each finding represents a documented violation with severity and regulatory reference.",
+      "primary_key": "finding_id",
+      "foreign_keys": { "process_id": "clinical_processes.process_id" },
+      "columns": {
+        "finding_id":         { "type": "TEXT",    "description": "Unique finding ID. Format: FND000001", "example": "FND000001" },
+        "process_id":         { "type": "TEXT",    "description": "Foreign key to clinical_processes table", "example": "PRC000001" },
+        "auditor_id":         { "type": "TEXT",    "description": "ID of the auditor who raised the finding", "example": "AUD012" },
+        "audit_date":         { "type": "DATE",    "description": "Date the audit was performed", "example": "2024-06-01" },
+        "violation_type":     { "type": "TEXT",    "description": "Category of violation: DocumentationGap | ConsentMissing | ProtocolDeviation | ReportingFailure", "example": "ConsentMissing" },
+        "severity":           { "type": "TEXT",    "description": "Violation severity: Critical | Major | Minor. Critical requires immediate action.", "example": "Critical" },
+        "regulation_body":    { "type": "TEXT",    "description": "Regulatory framework: HIPAA | JCI | SOP", "example": "JCI" },
+        "policy_reference":   { "type": "TEXT",    "description": "Specific section of the regulation, e.g. Section 4.12", "example": "Section 4.12" },
+        "finding_description":{ "type": "TEXT",    "description": "Detailed description of the violation", "example": "Consent form absent before blood transfusion procedure" },
+        "resolution_status":  { "type": "TEXT",    "description": "Current status: Open | InReview | Resolved", "example": "Open" },
+        "resolved_at":        { "type": "DATETIME","description": "Timestamp when resolved. NULL if still open.", "example": null }
+      },
+      "useful_aggregations": [
+        "COUNT(*) WHERE severity = 'Critical' AND resolution_status = 'Open'",
+        "GROUP BY regulation_body — breakdown by HIPAA vs JCI vs SOP",
+        "GROUP BY department JOIN clinical_processes — violations by department",
+        "COUNT(*) WHERE audit_date >= date('now', '-30 days') — recent violations"
+      ]
+    },
+
+    "drugs": {
+      "description": "Master drug catalogue. One row per distinct drug product.",
+      "primary_key": "drug_id",
+      "columns": {
+        "drug_id":      { "type": "TEXT", "description": "Unique drug ID. Format: DRG0001", "example": "DRG0001" },
+        "drug_name":    { "type": "TEXT", "description": "Brand/trade name including strength", "example": "Amoxicillin 500mg" },
+        "generic_name": { "type": "TEXT", "description": "INN generic name", "example": "Amoxicillin" },
+        "category":     { "type": "TEXT", "description": "Therapeutic category: Antibiotic | Antidiabetic | Cardiovascular | Antihypertensive | Antiemetic | Gastrointestinal | Analgesic | Anticoagulant | Oncology | Corticosteroid | Respiratory | Vitamin", "example": "Antibiotic" },
+        "unit":         { "type": "TEXT", "description": "Dispensing unit: tablets | vials | ml | mg | inhalers", "example": "tablets" },
+        "unit_cost":    { "type": "REAL", "description": "Cost per unit in INR", "example": 12.50 },
+        "supplier":     { "type": "TEXT", "description": "Pharmaceutical manufacturer/supplier name", "example": "Cipla Ltd" }
+      },
+      "relationships": {
+        "drug_inventory": "One drug → many inventory batches (via drug_id)"
+      }
+    },
+
+    "drug_inventory": {
+      "description": "Inventory batches for each drug. Multiple batches per drug with different expiry dates and stock levels. Use this table for expiry alerts and reorder triggers.",
+      "primary_key": "inventory_id",
+      "foreign_keys": { "drug_id": "drugs.drug_id" },
+      "columns": {
+        "inventory_id":             { "type": "TEXT",    "description": "Unique inventory batch ID. Format: INV0000001", "example": "INV0000001" },
+        "drug_id":                  { "type": "TEXT",    "description": "Foreign key to drugs table", "example": "DRG0001" },
+        "batch_number":             { "type": "TEXT",    "description": "Manufacturer batch number", "example": "BAT-ABCD-1234" },
+        "manufacture_date":         { "type": "DATE",    "description": "Date of manufacture", "example": "2023-06-01" },
+        "expiry_date":              { "type": "DATE",    "description": "Expiry date. CRITICAL: compare to DATE('now') or julianday() for expiry alerts.", "example": "2024-12-31" },
+        "current_stock":            { "type": "INTEGER", "description": "Current quantity in stock (in dispensing units)", "example": 240 },
+        "reorder_threshold":        { "type": "INTEGER", "description": "Stock level that triggers a reorder alert. Alert fires when current_stock < reorder_threshold.", "example": 100 },
+        "max_stock_level":          { "type": "INTEGER", "description": "Maximum storage capacity for this item", "example": 1000 },
+        "average_daily_consumption":{ "type": "REAL",    "description": "Average units consumed per day. Use for stockout estimation: current_stock / average_daily_consumption = days_until_stockout.", "example": 15.5 },
+        "supplier_lead_time_days":  { "type": "INTEGER", "description": "Days from order to delivery by supplier", "example": 7 },
+        "last_restocked":           { "type": "DATE",    "description": "Date of most recent stock replenishment", "example": "2024-05-10" }
+      },
+      "useful_aggregations": [
+        "WHERE julianday(expiry_date) - julianday('now') <= 60 — expiring within 60 days",
+        "WHERE julianday(expiry_date) - julianday('now') <= 0  — already expired",
+        "WHERE current_stock < reorder_threshold               — below reorder threshold",
+        "ROUND(current_stock * unit_cost, 2) JOIN drugs        — stock value at risk"
+      ]
+    },
+
+    "appointments": {
+      "description": "Scheduled and completed patient appointments. Used for SLA breach detection based on wait time vs category threshold.",
+      "primary_key": "appointment_id",
+      "foreign_keys": { "patient_id": "patients.patient_id" },
+      "columns": {
+        "appointment_id":        { "type": "TEXT",    "description": "Unique appointment ID. Format: APT000001", "example": "APT000001" },
+        "patient_id":            { "type": "TEXT",    "description": "Foreign key to patients table", "example": "PAT000001" },
+        "doctor_name":           { "type": "TEXT",    "description": "Treating physician name", "example": "Dr. Sunita Mehta" },
+        "department":            { "type": "TEXT",    "description": "Clinical department", "example": "Neurology" },
+        "appointment_category":  { "type": "TEXT",    "description": "Category defining SLA threshold: GP (30 min) | Specialist (45 min) | Emergency (15 min)", "example": "Specialist" },
+        "scheduled_datetime":    { "type": "DATETIME","description": "Originally scheduled date and time", "example": "2024-06-15 10:00:00" },
+        "actual_start_datetime": { "type": "DATETIME","description": "Actual time the appointment started. Difference from scheduled = wait time.", "example": "2024-06-15 10:52:00" },
+        "wait_time_minutes":     { "type": "INTEGER", "description": "Pre-calculated wait time in minutes (actual_start - scheduled). Key field for SLA breach checks.", "example": 52 },
+        "appointment_status":    { "type": "TEXT",    "description": "Outcome: Completed | Cancelled | NoShow", "example": "Completed" }
+      },
+      "relationships": {
+        "patients":           "Many appointments → one patient",
+        "patient_complaints": "One appointment → many complaints"
+      },
+      "sla_thresholds": {
+        "GP": 30,
+        "Specialist": 45,
+        "Emergency": 15
+      }
+    },
+
+    "patient_complaints": {
+      "description": "Patient complaints about appointment wait times. Includes SLA breach assessment and compensation eligibility determination.",
+      "primary_key": "complaint_id",
+      "foreign_keys": {
+        "patient_id":     "patients.patient_id",
+        "appointment_id": "appointments.appointment_id"
+      },
+      "columns": {
+        "complaint_id":           { "type": "TEXT",    "description": "Unique complaint ID. Format: CMP000001", "example": "CMP000001" },
+        "patient_id":             { "type": "TEXT",    "description": "Foreign key to patients", "example": "PAT000001" },
+        "appointment_id":         { "type": "TEXT",    "description": "Foreign key to appointments (may be NULL)", "example": "APT000001" },
+        "complaint_date":         { "type": "DATE",    "description": "Date complaint was filed", "example": "2024-06-16" },
+        "complaint_text":         { "type": "TEXT",    "description": "Free-text complaint description", "example": "Waited over an hour past scheduled time" },
+        "sla_threshold_minutes":  { "type": "INTEGER", "description": "Applicable SLA threshold in minutes for the appointment category", "example": 45 },
+        "sla_breached":           { "type": "INTEGER", "description": "Boolean: 1 = wait exceeded SLA threshold, 0 = within SLA", "example": 1 },
+        "breach_severity":        { "type": "TEXT",    "description": "Severity of SLA breach: Critical (>2x threshold) | High | Medium | None", "example": "Critical" },
+        "compensation_eligible":  { "type": "INTEGER", "description": "Boolean: 1 = patient qualifies for compensation under policy", "example": 1 },
+        "compensation_type":      { "type": "TEXT",    "description": "Type of compensation: Voucher | Refund | Escalation | None", "example": "Refund" },
+        "resolution_status":      { "type": "TEXT",    "description": "Current status: Open | AutoResolved | EscalatedToStaff", "example": "EscalatedToStaff" }
+      }
+    },
+
+    "vehicles": {
+      "description": "Medical transport vehicle registry. Used for delivery assignment and availability checks.",
+      "primary_key": "vehicle_id",
+      "columns": {
+        "vehicle_id":    { "type": "TEXT",    "description": "Unique vehicle ID. Format: VEH0001", "example": "VEH0001" },
+        "vehicle_type":  { "type": "TEXT",    "description": "Vehicle type: Ambulance | Van | Motorcycle | Refrigerated", "example": "Refrigerated" },
+        "registration":  { "type": "TEXT",    "description": "Vehicle registration plate", "example": "DL-12-AB-3456" },
+        "capacity_kg":   { "type": "REAL",    "description": "Maximum load capacity in kilograms", "example": 500.0 },
+        "available":     { "type": "INTEGER", "description": "Boolean: 1 = vehicle available for assignment, 0 = deployed", "example": 1 },
+        "base_location": { "type": "TEXT",    "description": "Home base / depot location name in Delhi", "example": "AIIMS Delhi" }
+      },
+      "relationships": {
+        "delivery_records": "One vehicle → many deliveries (via vehicle_id)"
+      }
+    },
+
+    "routes": {
+      "description": "Predefined delivery routes between hospital locations in Delhi. traffic_factor multiplies base duration to get realistic ETA.",
+      "primary_key": "route_id",
+      "columns": {
+        "route_id":                   { "type": "TEXT",  "description": "Unique route ID. Format: RTE0001", "example": "RTE0001" },
+        "origin":                     { "type": "TEXT",  "description": "Starting location name", "example": "AIIMS Delhi" },
+        "destination":                { "type": "TEXT",  "description": "End location name", "example": "Max Hospital Saket" },
+        "distance_km":                { "type": "REAL",  "description": "Route distance in kilometres", "example": 8.5 },
+        "estimated_duration_minutes": { "type": "INTEGER","description": "Base estimated travel time in minutes (no traffic)", "example": 25 },
+        "traffic_factor":             { "type": "REAL",  "description": "Multiplier for peak-hour delays: 1.0 = no delay, 1.5 = 50% longer, 1.8 = severe congestion. Adjusted ETA = estimated_duration_minutes * traffic_factor.", "example": 1.5 },
+        "route_type":                 { "type": "TEXT",  "description": "Road type: Highway | Urban | Rural", "example": "Urban" }
+      }
+    },
+
+    "delivery_records": {
+      "description": "Individual medical delivery records. Each record tracks a dispatch from origin to destination with SLA compliance data.",
+      "primary_key": "delivery_id",
+      "foreign_keys": {
+        "vehicle_id": "vehicles.vehicle_id",
+        "route_id":   "routes.route_id"
+      },
+      "columns": {
+        "delivery_id":               { "type": "TEXT",    "description": "Unique delivery ID. Format: DEL000001", "example": "DEL000001" },
+        "vehicle_id":                { "type": "TEXT",    "description": "Foreign key to vehicles table", "example": "VEH0001" },
+        "route_id":                  { "type": "TEXT",    "description": "Foreign key to routes table", "example": "RTE0001" },
+        "delivery_category":         { "type": "TEXT",    "description": "Priority category: Emergency (SLA 30 min) | Routine (SLA 120 min) | Refrigerated (SLA 60 min)", "example": "Emergency" },
+        "scheduled_datetime":        { "type": "DATETIME","description": "Scheduled departure/delivery time", "example": "2024-06-15 08:00:00" },
+        "actual_delivery_datetime":  { "type": "DATETIME","description": "Actual delivery completion time. NULL if not yet delivered.", "example": "2024-06-15 08:45:00" },
+        "sla_window_minutes":        { "type": "INTEGER", "description": "SLA time window in minutes: Emergency=30, Refrigerated=60, Routine=120", "example": 30 },
+        "estimated_cost":            { "type": "REAL",    "description": "Estimated delivery cost in INR", "example": 1250.00 },
+        "delivery_status":           { "type": "TEXT",    "description": "Current status: Scheduled | InTransit | Delivered | Delayed", "example": "Delayed" },
+        "sla_breached":              { "type": "INTEGER", "description": "Boolean: 1 = delivery exceeded SLA window, 0 = on time", "example": 1 },
+        "delay_reason":              { "type": "TEXT",    "description": "Free-text reason for delay. NULL if on time.", "example": "Heavy traffic on NH-48 near Dhaula Kuan" }
+      },
+      "sla_windows": {
+        "Emergency":   30,
+        "Refrigerated": 60,
+        "Routine":     120
+      },
+      "useful_aggregations": [
+        "COUNT(*) WHERE sla_breached = 1 AND delivery_category = 'Emergency'",
+        "AVG(estimated_cost) GROUP BY delivery_category",
+        "COUNT(*) WHERE delivery_status = 'Delivered' AND sla_breached = 0 — on-time rate",
+        "estimated_duration_minutes * traffic_factor JOIN routes — adjusted ETA"
+      ]
+    }
+  },
+
+  "join_patterns": {
+    "billing_with_diagnosis": "SELECT bc.*, e.primary_diagnosis_icd10, p.full_name FROM billing_claims bc JOIN encounters e ON bc.encounter_id = e.encounter_id JOIN patients p ON bc.patient_id = p.patient_id",
+    "compliance_with_department": "SELECT af.*, cp.department, cp.process_type, cp.staff_name FROM audit_findings af JOIN clinical_processes cp ON af.process_id = cp.process_id",
+    "pharmacy_with_drug_details": "SELECT di.*, d.drug_name, d.category, d.unit_cost, d.supplier FROM drug_inventory di JOIN drugs d ON di.drug_id = d.drug_id",
+    "complaints_with_patient_and_appt": "SELECT pc.*, p.full_name, p.patient_tier, a.appointment_category, a.wait_time_minutes FROM patient_complaints pc JOIN patients p ON pc.patient_id = p.patient_id LEFT JOIN appointments a ON pc.appointment_id = a.appointment_id",
+    "delivery_with_route_and_vehicle": "SELECT dr.*, r.origin, r.destination, r.distance_km, r.traffic_factor, ROUND(r.estimated_duration_minutes * r.traffic_factor) AS adjusted_eta, v.vehicle_type, v.registration FROM delivery_records dr JOIN routes r ON dr.route_id = r.route_id JOIN vehicles v ON dr.vehicle_id = v.vehicle_id"
+  },
+
+  "query_rules": [
+    "ALWAYS use SELECT only. Never INSERT, UPDATE, DELETE, or DROP.",
+    "ALWAYS use parameterised placeholders (?) for any user-supplied values.",
+    "For expiry date comparisons use: julianday(expiry_date) - julianday('now')",
+    "For date range queries use: DATE('now', '-N days') or DATE('now', '+N days')",
+    "Default LIMIT is 50 rows. Use aggregate queries (COUNT, SUM, AVG) for summary questions.",
+    "For adjusted ETA always multiply: estimated_duration_minutes * traffic_factor",
+    "For days until stockout calculate: ROUND(current_stock / average_daily_consumption)",
+    "Boolean columns (has_coding_error, sla_breached, available, etc.) store 1 for TRUE and 0 for FALSE"
+  ]
+}

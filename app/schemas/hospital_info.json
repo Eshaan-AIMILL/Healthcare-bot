@@ -1,0 +1,120 @@
+{
+  "hospital": {
+    "name": "Apollo Multi-Specialty Hospital",
+    "location": "New Delhi, India",
+    "type": "Private Multi-Specialty Tertiary Care",
+    "accreditation": ["NABH", "JCI"],
+    "established": 2005,
+    "beds": 450,
+    "currency": "INR"
+  },
+
+  "departments": [
+    "Cardiology", "Oncology", "Orthopaedics", "General Medicine",
+    "Emergency", "Neurology", "Dermatology", "Gynaecology",
+    "Paediatrics", "Radiology"
+  ],
+
+  "patient_tiers": {
+    "Standard": {
+      "description": "General ward patients",
+      "sla_multiplier": 1.0,
+      "compensation_eligible": true,
+      "compensation_types": ["Voucher", "Refund"]
+    },
+    "Premium": {
+      "description": "Semi-private room patients with enhanced SLA",
+      "sla_multiplier": 0.8,
+      "compensation_eligible": true,
+      "compensation_types": ["Voucher", "Refund"]
+    },
+    "VIP": {
+      "description": "Private suite patients with dedicated liaison",
+      "sla_multiplier": 0.6,
+      "compensation_eligible": true,
+      "compensation_types": ["Escalation", "Refund"]
+    }
+  },
+
+  "insurance_payers": [
+    "Apollo Munich Health Insurance",
+    "Star Health Insurance",
+    "ICICI Lombard General Insurance",
+    "Bajaj Allianz General Insurance",
+    "New India Assurance",
+    "National Insurance Company",
+    "Reliance Health Insurance",
+    "HDFC ERGO Health Insurance"
+  ],
+
+  "appointment_sla_minutes": {
+    "GP": 30,
+    "Specialist": 45,
+    "Emergency": 15
+  },
+
+  "dispatch_locations": [
+    "AIIMS Delhi", "Safdarjung Hospital", "RML Hospital", "GTB Hospital",
+    "Max Hospital Saket", "Apollo Hospital Saket", "Fortis Vasant Kunj",
+    "Sir Ganga Ram Hospital", "BLK Hospital", "Lok Nanak Hospital",
+    "Connaught Place Pharmacy Hub", "Karol Bagh Depot",
+    "Rohini Medical Centre", "Dwarka Distribution Centre"
+  ],
+
+  "delivery_sla_minutes": {
+    "Emergency":   30,
+    "Refrigerated": 60,
+    "Routine":     120
+  },
+
+  "icd10_common_codes": {
+    "J06.9": "Acute upper respiratory infection, unspecified",
+    "I10":   "Essential (primary) hypertension",
+    "E11.9": "Type 2 diabetes mellitus without complications",
+    "K21.0": "Gastro-oesophageal reflux disease with oesophagitis",
+    "M54.5": "Low back pain",
+    "J18.9": "Pneumonia, unspecified organism",
+    "N18.3": "Chronic kidney disease, stage 3",
+    "F32.1": "Major depressive disorder, single episode, moderate",
+    "C50.919": "Malignant neoplasm of unspecified site of unspecified female breast",
+    "Z30.09": "Encounter for other general contraceptive management"
+  },
+
+  "cpt_common_codes": {
+    "99213": "Office or outpatient visit, established patient, low complexity",
+    "99214": "Office or outpatient visit, established patient, moderate complexity",
+    "99285": "Emergency department visit, high complexity",
+    "93000": "Electrocardiogram, routine ECG with at least 12 leads",
+    "71046": "Radiologic examination, chest; 2 views",
+    "80053": "Comprehensive metabolic panel",
+    "36415": "Collection of venous blood by venipuncture",
+    "43239": "Esophagogastroduodenoscopy, with biopsy",
+    "27447": "Total knee arthroplasty",
+    "99232": "Subsequent hospital care, moderate complexity"
+  },
+
+  "coding_error_types": {
+    "CodeMismatch":     "ICD-10 diagnosis code and CPT procedure code are clinically inconsistent",
+    "MissingModifier":  "Required HCPCS modifier (e.g. -25, -59) absent from claim",
+    "Unbundling":       "Services billed separately that should be included in a single comprehensive code",
+    "Upcoding":         "Higher-complexity CPT code billed than the documented clinical complexity supports"
+  },
+
+  "compliance_frameworks": {
+    "HIPAA": {
+      "full_name": "Health Insurance Portability and Accountability Act",
+      "key_rules": ["Privacy Rule (45 CFR § 164.502)", "Security Rule (45 CFR § 164.312)"],
+      "critical_violations": ["Unauthorised PHI disclosure", "Missing patient authorisation", "ePHI access control failure"]
+    },
+    "JCI": {
+      "full_name": "Joint Commission International",
+      "key_standards": ["COP.1 — Care of Patients", "PFR.4 — Patient Consent"],
+      "critical_violations": ["Missing signed consent before surgery", "No care plan within 24h of admission"]
+    },
+    "SOP": {
+      "full_name": "Standard Operating Procedures (internal hospital)",
+      "key_document": "SOP-PHARM-003 — Medication Administration Protocol",
+      "critical_violations": ["Missing double-check for high-alert medications", "Unreported medication errors"]
+    }
+  }
+}
