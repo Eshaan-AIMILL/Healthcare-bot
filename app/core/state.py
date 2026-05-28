@@ -8,7 +8,13 @@ class AgentState:
     query: str = ""
     role: str = "guest"
     security_context: Optional[SecurityContext] = None
-    intent: str = "" 
+    intent: str = ""
+
+    # For cross-domain: list of all detected domain intents
+    intents: list[str] = field(default_factory=list)
+
+    # For cross-domain: per-domain agent results keyed by domain name
+    domain_results: dict[str, Any] = field(default_factory=dict)
 
     # Confidence
     intent_confidence: float = 0.0
@@ -25,3 +31,4 @@ class AgentState:
     final_response: str = ""
 
     error: str = ""
+

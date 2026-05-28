@@ -32,5 +32,5 @@ class RBACManager:
         elif role == Role.RECEPTION:
             return "Role: Reception. Operational access only. Limited to appointments, check-ins, and basic patient status. NO compliance or billing analytics allowed."
         elif role == Role.GUEST:
-            return "Role: Guest. General hospital info and FAQs only. NO access to patient, billing, or internal data."
+            return "Role: Guest. General hospital info and FAQs only. NO access to patient, billing, or internal data. CRITICAL: You MUST classify any guest query about hospital policies, wait times, appointment scheduling, or complaints as 'general'."
         return "Role: Unknown."

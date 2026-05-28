@@ -1,6 +1,6 @@
 import json
 from app.core.state import AgentState
-from app.utils.prompts import SUMMARIZER_SYSTEM, SUMMARIZER_USER
+from app.utils.prompts import SUMMARIZER_SYSTEM, SUMMARIZER_USER, CROSS_DOMAIN_SUMMARIZER_SYSTEM, CROSS_DOMAIN_SUMMARIZER_USER
 from app.utils.logger import logger
 from app.config import settings
 from langchain_ollama import ChatOllama
@@ -278,8 +278,11 @@ def _pharmacy_reorder_summary(sql_rows: list[dict]) -> str | None:
 
     if not rows:
         return (
-            "No drug batches are currently below their reorder threshold.\n\n"
-            "Recommended next action: continue routine inventory monitoring."
+            f"{below_count} drug batches are below reorder threshold; {critical_count} are critical "
+            f"because projected stockout is within supplier lead time. Total reorder gap is "
+            f"{total_gap} units.\n\n"
+            "Detailed batch-level rows are not available in this view.\n\n"
+            "Recommended next action: continue routine inventory monitoring or place orders for critical items."
         )
 
     table_rows = [
@@ -320,8 +323,11 @@ def _pharmacy_expiry_summary(sql_rows: list[dict]) -> str | None:
 
     if not rows:
         return (
-            "No drug batches are expiring within the next 60 days.\n\n"
-            "Recommended next action: continue routine inventory monitoring."
+            f"{batch_count} drug batches are expiring within the next 60 days, "
+            f"with total inventory cost exposure of {total_exposure}.\n\n"
+            "Detailed batch-level rows are not available in this view.\n\n"
+            "Recommended next action: prioritize use, transfer, or supplier return for the "
+            "earliest-expiring high-exposure batches."
         )
 
     table_rows = [
@@ -375,7 +381,7 @@ def _patient_department_sla_summary(sql_rows: list[dict]) -> str | None:
 
     rows = [row for row in sql_rows if row.get("department")]
     if not rows:
-        return "No specialist appointment SLA compliance records were found."
+        return "No specialist appointment SLA compliance records were found or only aggregates are available."
 
     worst = rows[0]
     table_rows = [
@@ -429,7 +435,7 @@ def _dispatch_on_time_summary(sql_rows: list[dict]) -> str | None:
             )
         )
 
-    route_text = "\n".join(table_rows) if rows else "No route-level dispatch rows were found."
+    route_text = "\n".join(table_rows) if rows else "Detailed route-level performance is not available in this view."
 
     return (
         f"Emergency medical dispatch on-time delivery rate this month is {on_time_rate} "
@@ -490,13 +496,49 @@ def _deterministic_summary(state: AgentState) -> str | None:
 
 
 async def summarizer_node(state: AgentState) -> AgentState:
-    if state.error and not state.agent_result:
+    if state.error and not state.agent_result and not state.domain_results:
         state.final_response = (
             "I encountered an issue processing your request. "
             f"Error: {state.error}. Please try rephrasing your question."
         )
         return state
 
+    # ── Cross-domain path ──────────────────────────────────────────────────────
+    if state.intent == "cross_domain" and state.domain_results:
+        llm = _build_llm()
+        # Build a readable summary of all domain results for the LLM
+        domain_summary_parts = []
+        for domain, data in state.domain_results.items():
+            domain_summary_parts.append(
+                f"## {domain.upper()}\n"
+                f"Agent Result: {json.dumps(data.get('agent_result', {}), default=str, indent=2)}\n"
+                f"SQL Rows (sample): {json.dumps(data.get('sql_rows', [])[:3], default=str, indent=2)}\n"
+                + (f"Error: {data['error']}" if data.get('error') else "")
+            )
+        domain_results_text = "\n\n".join(domain_summary_parts)
+
+        messages = [
+            SystemMessage(content=CROSS_DOMAIN_SUMMARIZER_SYSTEM),
+            HumanMessage(
+                content=CROSS_DOMAIN_SUMMARIZER_USER.format(
+                    query=state.query,
+                    domain_results=domain_results_text,
+                )
+            ),
+        ]
+        try:
+            response = await llm.ainvoke(messages)
+            state.final_response = response.content.strip()
+            logger.info(f"Cross-domain summarizer produced {len(state.final_response)} char response.")
+        except Exception as exc:
+            logger.error(f"Cross-domain summarizer failed: {exc}")
+            state.final_response = (
+                "The cross-domain analysis completed but the response formatter encountered an error. "
+                f"Raw results: {json.dumps(state.agent_result, default=str)}"
+            )
+        return state
+
+    # ── Single-domain path ────────────────────────────────────────────────────
     direct_response = _deterministic_summary(state)
     if direct_response:
         state.final_response = direct_response

@@ -36,10 +36,17 @@ def validate_sql_against_schema(sql_query: str) -> str | None:
         if table not in valid_tables:
             return f"Hallucinated table: '{table}'. Valid tables are: {', '.join(valid_tables)}"
             
+    # Extract defined aliases so we don't flag them as hallucinated columns
+    query_aliases = {alias.alias for alias in parsed.find_all(exp.Alias)}
+
     # 3. Extract and validate columns
     for column in parsed.find_all(exp.Column):
         col_name = column.name
         table_alias = column.table
+        
+        # Skip if it's an alias defined in the query
+        if col_name in query_aliases:
+            continue
         
         # If the column has a table alias, we can check it directly
         if table_alias:

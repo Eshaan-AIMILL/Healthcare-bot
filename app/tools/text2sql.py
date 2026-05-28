@@ -22,19 +22,9 @@ from app.db.introspection import build_schema_metadata
 from app.tools.sql_validator import validate_sql_against_schema
 from app.core.security import SecurityContext
 from app.core.rbac import RBACManager, Role
+from app.utils.prompts import TEXT2SQL_SYSTEM, TEXT2SQL_USER
 
-_SYSTEM_PROMPT_TEMPLATE = """\
-You are a SQL query generator for a healthcare SQLite database.
-Your job is to convert the user's natural-language question into one safe,
-parameterised SQLite SELECT query based on the exact schema below.
 
-{schema}
-
-Respond with valid JSON only. No markdown fences. No extra keys.
-Format: {{"sql": "<SELECT query with ? placeholders>", "params": [<values>], "explanation": "<one sentence>"}}
-"""
-
-_USER_PROMPT_TEMPLATE = "Question: {question}"
 
 def _build_llm() -> ChatOllama:
     return ChatOllama(
@@ -45,11 +35,8 @@ def _build_llm() -> ChatOllama:
     )
 
 async def safe_execute_query(db: AsyncSession, sql_query: str, params: list | dict) -> list[dict[str, Any]]:
-    """
-    Layer 4: Safe Execution Wrapper.
-    Normalizes parameters and prevents malformed execute calls.
-    """
-    # SQLite / SQLAlchemy expects a tuple or dict, not a raw list
+    # Layer 4: Safe Execution Wrapper.
+    # Normalizes parameters and prevents malformed execute calls.
     if isinstance(params, list):
         params = tuple(params)
         
@@ -82,15 +69,15 @@ async def run_text2sql(question: str, db: AsyncSession, security_context: Securi
         raise PermissionError(f"Independent Tool Authorization Failed: Role {user_role.value} cannot query {domain}.")
 
     schema_context = build_schema_metadata()
-    system_prompt = _SYSTEM_PROMPT_TEMPLATE.format(schema=schema_context)
+    system_prompt = TEXT2SQL_SYSTEM.format(schema=schema_context, domain=domain)
 
     llm = _build_llm()
     messages = [
         SystemMessage(content=system_prompt),
-        HumanMessage(content=_USER_PROMPT_TEMPLATE.format(question=question)),
+        HumanMessage(content=TEXT2SQL_USER.format(question=question)),
     ]
 
-    max_retries = 3
+    max_retries = 1
     
     for attempt in range(max_retries):
         try:

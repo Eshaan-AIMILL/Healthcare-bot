@@ -6,6 +6,7 @@ from app.agents.compliance import compliance_node
 from app.agents.pharmacy import pharmacy_node
 from app.agents.patient import patient_node
 from app.agents.dispatch import dispatch_node
+from app.agents.cross_domain import cross_domain_node
 from app.agents.summarizer import summarizer_node
 
 
@@ -19,12 +20,13 @@ def build_graph() -> StateGraph:
     graph.add_node("pharmacy", pharmacy_node)
     graph.add_node("patient", patient_node)
     graph.add_node("dispatch", dispatch_node)
+    graph.add_node("cross_domain", cross_domain_node)
     graph.add_node("summarizer", summarizer_node)
 
     # Entry point
     graph.set_entry_point("planner")
 
-    # Conditional routing : planner to domain agents
+    # Conditional routing: planner to domain agents
     graph.add_conditional_edges(
         "planner",
         route_intent,
@@ -34,14 +36,18 @@ def build_graph() -> StateGraph:
             "pharmacy": "pharmacy",
             "patient": "patient",
             "dispatch": "dispatch",
+            "cross_domain": "cross_domain",   # NEW: fan-out route
             "unauthorized": "summarizer",
             "general": "summarizer",
         },
     )
 
-    # All domain agents feed into the summarizer
+    # All single-domain agents feed into the summarizer
     for domain in ("billing", "compliance", "pharmacy", "patient", "dispatch"):
         graph.add_edge(domain, "summarizer")
+
+    # Cross-domain orchestrator also feeds into summarizer
+    graph.add_edge("cross_domain", "summarizer")
 
     # Summarizer is the terminal node
     graph.add_edge("summarizer", END)
