@@ -1,12 +1,13 @@
 from dataclasses import dataclass, field
-from typing import Any
-
+from typing import Any, Optional
+from app.core.security import SecurityContext
 
 @dataclass
 class AgentState:
 
     query: str = ""
     role: str = "guest"
+    security_context: Optional[SecurityContext] = None
     intent: str = "" 
 
     # Confidence

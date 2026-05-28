@@ -8,11 +8,12 @@ import uuid
 import json
 from collections.abc import Mapping
 from typing import Any
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
 from app.core.graph import compiled_graph
 from app.core.state import AgentState
+from app.core.security import verify_and_create_context
 from app.utils.logger import logger
 
 router = APIRouter()
@@ -27,7 +28,8 @@ class ChatRequest(BaseModel):
     model: str = "healthcare-bot"
     messages: list[ChatMessage]
     stream: bool = False
-    role: str = "guest"  # admin | reception | guest
+    role: str = "guest"  # fallback
+    metadata: dict[str, Any] = {}
 
 
 class ChatChoice(BaseModel):
@@ -83,8 +85,33 @@ def _metadata_prompt_response(query: str) -> str | None:
     return None
 
 
+@router.get("/v1/models")
+async def list_models():
+    """
+    Required by Open WebUI to populate the models dropdown.
+    """
+    return {
+        "object": "list",
+        "data": [
+            {
+                "id": "healthcare-bot",
+                "object": "model",
+                "created": int(time.time()),
+                "owned_by": "hospital"
+            }
+        ]
+    }
+
+
 @router.post("/v1/chat/completions", response_model=ChatResponse)
-async def chat_completions(request: ChatRequest) -> ChatResponse:
+async def chat_completions(http_request: Request, request: ChatRequest) -> ChatResponse:
+    
+    # Log incoming headers for debugging Open WebUI auth passing
+    logger.info(f"Incoming headers: {http_request.headers}")
+    
+    # Log raw body to see what Open WebUI actually sends!
+    raw_body = await http_request.json()
+    logger.info(f"Raw incoming body: {raw_body}")
     
     user_messages = [m for m in request.messages if m.role == "user"]
     if not user_messages:
@@ -111,13 +138,70 @@ async def chat_completions(request: ChatRequest) -> ChatResponse:
 
     conversation_history = [{"role": m.role, "content": m.content} for m in request.messages]
 
+    # Extract security context from metadata or from a special injected payload
+    security_metadata = request.metadata
+    
+    # 1. Check for injected system message from Open WebUI Filter (Method A)
+    for i, msg in enumerate(conversation_history):
+        if msg["role"] == "system" and msg["content"].startswith("SECURITY_CONTEXT:"):
+            try:
+                sec_data = json.loads(msg["content"].replace("SECURITY_CONTEXT:", "", 1))
+                security_metadata = {
+                    "security_context": sec_data.get("context"),
+                    "security_signature": sec_data.get("signature")
+                }
+                # Remove it so the LLM doesn't see it
+                conversation_history.pop(i)
+                break
+            except Exception as e:
+                logger.error(f"Failed to parse injected system security context: {e}")
+
+    # 2. Check for injected payload appended to the last user message (Method B)
+    if not security_metadata:
+        for i in range(len(conversation_history) - 1, -1, -1):
+            msg = conversation_history[i]
+            if msg["role"] == "user" and "[SECURITY_CONTEXT:" in msg["content"]:
+                try:
+                    content_str = msg["content"]
+                    start_idx = content_str.rfind("[SECURITY_CONTEXT:")
+                    json_str = content_str[start_idx + len("[SECURITY_CONTEXT:"):]
+                    if json_str.endswith("]"):
+                        json_str = json_str[:-1]
+                    
+                    sec_data = json.loads(json_str)
+                    security_metadata = {
+                        "security_context": sec_data.get("context"),
+                        "security_signature": sec_data.get("signature")
+                    }
+                    
+                    clean_content = content_str[:start_idx].strip()
+                    conversation_history[i]["content"] = clean_content
+                    
+                    if i == len(conversation_history) - 1:
+                        latest_query = clean_content
+                        
+                    break
+                except Exception as e:
+                    logger.error(f"Failed to parse injected user security context: {e}")
+
+    security_context = verify_and_create_context(security_metadata)
+    if not security_context:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=403, content={
+            "status": "denied",
+            "reason": "Insufficient permissions or spoofed role. Access blocked.",
+            "required_role": "Valid OpenWebUI Session",
+            "debug_metadata_received": security_metadata
+        })
+
     initial_state = AgentState(
         query=latest_query,
-        role=request.role,
+        role=security_context.enterprise_role,
+        security_context=security_context,
         messages=conversation_history,
     )
 
-    logger.info(f"Processing query: {latest_query!r}")
+    logger.info(f"Processing query: {latest_query!r} by user {security_context.user_id} ({security_context.enterprise_role})")
 
     try:
         final_state = await compiled_graph.ainvoke(initial_state)

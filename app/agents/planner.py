@@ -21,10 +21,17 @@ def _build_llm() -> ChatOllama:
 
 async def planner_node(state: AgentState) -> AgentState:
     llm = _build_llm()
-    try:
-        user_role = Role(state.role.lower())
-    except ValueError:
+    
+    # Extract robust SecurityContext
+    ctx = state.security_context
+    if not ctx:
+        logger.error("Planner missing SecurityContext! Defaulting to Guest.")
         user_role = Role.GUEST
+    else:
+        try:
+            user_role = Role(ctx.enterprise_role)
+        except ValueError:
+            user_role = Role.GUEST
         
     role_context = RBACManager.get_role_context(user_role)
     system_prompt = f"{PLANNER_SYSTEM}\n\nUSER CONTEXT:\n{role_context}"
@@ -49,7 +56,7 @@ async def planner_node(state: AgentState) -> AgentState:
         
         # Check RBAC
         if intent != "general" and not RBACManager.can_access_domain(user_role, intent):
-            logger.warning(f"RBAC block: Role '{user_role.value}' denied access to '{intent}'.")
+            logger.warning(f"RBAC block: Role '{user_role.value}' denied access to '{intent}' (User ID: {getattr(ctx, 'user_id', 'unknown')}).")
             state.intent = "unauthorized"
             state.intent_confidence = 1.0
             state.error = f"Unauthorized. Your role '{user_role.value}' cannot access the '{intent}' domain."

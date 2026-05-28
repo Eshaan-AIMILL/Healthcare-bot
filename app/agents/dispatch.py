@@ -43,7 +43,7 @@ def _build_llm() -> ChatOllama:
 async def dispatch_node(state: AgentState) -> AgentState:
     async with AsyncSessionLocal() as db:
         # Step 1 — fetch relevant delivery rows via Text2SQL
-        sql_rows = await run_text2sql(state.query, db)
+        sql_rows = await run_text2sql(state.query, db, security_context=state.security_context, domain="dispatch")
 
         # Step 2 — run production engine checks on up to 5 deliveries
         assessments = []

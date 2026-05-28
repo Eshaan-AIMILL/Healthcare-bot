@@ -987,3 +987,331 @@ CUDA error
 2026-05-27 20:13:14 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local']: ALERT: Dispatch SLA breach rate is 45.7% in last 24h
 2026-05-27 20:13:14 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
 2026-05-27 20:13:14 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired
+2026-05-27 22:03:24 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 22:07:32 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 22:10:00 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 22:10:30 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 22:10:30 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-27 22:10:34 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-27 22:10:34 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-27 22:10:38 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 439 new coding errors detected in last 24h
+2026-05-27 22:10:38 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-27 22:10:43 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-27 22:10:43 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-27 22:10:47 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 11 HIPAA violations recorded this week
+2026-05-27 22:10:47 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-27 22:10:51 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-27 22:10:51 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-27 22:10:56 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 126 drug items below reorder threshold
+2026-05-27 22:10:56 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-27 22:11:00 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 242 expired drug batches still in active inventory
+2026-05-27 22:11:00 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-27 22:11:05 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-27 22:11:05 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-27 22:11:09 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 92 unresolved patient complaints in queue
+2026-05-27 22:11:09 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-27 22:11:13 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-27 22:11:13 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_002 | High | ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-27 22:11:17 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-27 22:11:17 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
+2026-05-27 22:11:17 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired
+2026-05-27 22:15:48 | INFO     | app.api.chat:chat_completions:120 — Processing query: 'What departments does this hospital have?'
+2026-05-27 22:16:07 | INFO     | app.agents.planner:planner_node:48 — Planner → intent='general' confidence=1.00
+2026-05-27 22:16:24 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 929 char response.
+2026-05-27 22:16:56 | INFO     | app.api.chat:chat_completions:120 — Processing query: 'Gimme the list of patients'
+2026-05-27 22:17:03 | INFO     | app.agents.planner:planner_node:48 — Planner → intent='general' confidence=1.00
+2026-05-27 22:17:08 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 223 char response.
+2026-05-27 23:55:46 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-27 23:56:16 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-27 23:56:16 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-27 23:56:20 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-27 23:56:20 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-27 23:56:24 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 439 new coding errors detected in last 24h
+2026-05-27 23:56:24 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-27 23:56:28 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-27 23:56:28 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-27 23:56:33 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 11 HIPAA violations recorded this week
+2026-05-27 23:56:33 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-27 23:56:37 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-27 23:56:37 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-27 23:56:41 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 126 drug items below reorder threshold
+2026-05-27 23:56:41 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-27 23:56:45 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 242 expired drug batches still in active inventory
+2026-05-27 23:56:45 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-27 23:56:49 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-27 23:56:50 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-27 23:56:54 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 92 unresolved patient complaints in queue
+2026-05-27 23:56:54 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-27 23:56:58 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-27 23:56:58 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_002 | High | ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-27 23:57:02 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-27 23:57:02 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
+2026-05-27 23:57:02 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired
+2026-05-28 00:00:47 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:01:19 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:01:26 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:01:42 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:07:43 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:08:13 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-28 00:08:13 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:08:17 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:08:17 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:08:21 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:08:21 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:08:25 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:08:25 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:08:30 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:08:30 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:08:34 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:08:34 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-28 00:08:38 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 126 drug items below reorder threshold
+2026-05-28 00:08:38 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:08:42 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:08:42 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:08:46 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:08:46 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:08:51 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:08:51 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:08:55 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:08:55 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_002 | High | ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:08:59 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:08:59 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
+2026-05-28 00:08:59 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired
+2026-05-28 00:17:27 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:17:57 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-28 00:17:57 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:18:02 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:18:02 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:18:06 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:18:06 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:18:10 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:18:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:18:14 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:18:14 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:18:18 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:18:18 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-28 00:18:23 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 126 drug items below reorder threshold
+2026-05-28 00:18:23 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:18:27 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:18:27 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:18:31 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:18:31 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:18:35 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:18:35 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:18:40 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:18:40 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_002 | High | ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:18:44 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:18:44 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
+2026-05-28 00:18:44 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired
+2026-05-28 00:19:33 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:19:58 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:20:28 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-28 00:20:28 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:20:33 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:20:33 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:20:37 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:20:37 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:20:41 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:20:41 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:20:45 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:20:45 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:20:49 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:20:49 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-28 00:20:54 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 126 drug items below reorder threshold
+2026-05-28 00:20:54 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:20:58 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:20:58 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:21:02 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:21:02 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:21:06 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:21:06 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:21:11 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:21:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_002 | High | ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:21:15 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:21:15 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
+2026-05-28 00:21:15 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired
+2026-05-28 00:26:51 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:27:21 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-28 00:27:21 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:27:26 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:27:26 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:27:30 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:27:30 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:27:34 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:27:34 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:27:39 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:27:39 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:27:43 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:27:43 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-28 00:27:47 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 126 drug items below reorder threshold
+2026-05-28 00:27:47 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:27:52 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:27:52 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:27:56 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:27:56 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:28:01 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:28:01 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:28:05 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:28:05 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_002 | High | ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:28:09 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:28:09 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
+2026-05-28 00:28:09 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired
+2026-05-28 00:32:52 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:33:27 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:33:39 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:34:43 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:36:08 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:36:13 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:36:43 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-28 00:36:43 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:36:48 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:36:48 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:36:52 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:36:52 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:36:56 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:36:56 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:36:56 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:37:00 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:37:01 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:37:05 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:37:05 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-28 00:37:09 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 126 drug items below reorder threshold
+2026-05-28 00:37:09 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:37:13 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:37:13 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:37:13 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:37:18 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:37:18 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:37:22 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:37:22 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:37:26 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:37:26 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_002 | High | ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:37:31 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:37:31 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
+2026-05-28 00:37:31 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired
+2026-05-28 00:38:39 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:39:03 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:39:08 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:39:12 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:40:08 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:40:12 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:40:25 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:40:55 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-28 00:40:55 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:41:00 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:41:00 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:41:05 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:41:05 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:41:09 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:41:09 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:41:13 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:41:13 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:41:17 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:41:17 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-28 00:41:22 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 126 drug items below reorder threshold
+2026-05-28 00:41:22 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:41:26 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:41:26 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:41:30 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:41:30 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:41:34 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:41:34 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:41:39 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:41:39 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_002 | High | ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:41:43 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:41:43 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
+2026-05-28 00:41:43 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired
+2026-05-28 00:41:52 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:42:27 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:42:54 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:42:57 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-28 00:42:57 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:43:01 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:43:01 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:43:05 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:43:05 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:43:10 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:43:10 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:43:14 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:43:14 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:43:18 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:43:18 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-28 00:43:23 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 126 drug items below reorder threshold
+2026-05-28 00:43:23 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:43:27 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:43:27 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:43:31 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:43:31 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:43:36 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:43:36 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:43:40 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:46:16 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:46:32 | INFO     | app.api.chat:chat_completions:110 — Incoming headers: Headers({'host': 'host.docker.internal:8000', 'content-type': 'application/json', 'authorization': 'Bearer sk-1234', 'accept': '*/*', 'accept-encoding': 'gzip, deflate, br', 'user-agent': 'Python/3.11 aiohttp/3.13.5', 'content-length': '389'})
+2026-05-28 00:46:32 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:46:46 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-28 00:46:46 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:46:50 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:46:50 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:46:54 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:46:54 | INFO     | app.api.chat:chat_completions:110 — Incoming headers: Headers({'host': 'host.docker.internal:8000', 'content-type': 'application/json', 'authorization': 'Bearer sk-1234', 'accept': '*/*', 'accept-encoding': 'gzip, deflate, br', 'user-agent': 'Python/3.11 aiohttp/3.13.5', 'content-length': '389'})
+2026-05-28 00:46:54 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:46:54 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:46:59 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:46:59 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:47:03 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:47:03 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:47:07 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:47:07 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-28 00:47:11 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 126 drug items below reorder threshold
+2026-05-28 00:47:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:47:16 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:47:16 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:47:20 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:47:20 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:47:24 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:47:24 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_001 | Critical | URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:47:28 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 132 Emergency medical delivery/deliveries delayed
+2026-05-28 00:47:28 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | DISP_002 | High | ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:47:32 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['logistics-manager@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Dispatch SLA breach rate is 45.7% in last 24h
+2026-05-28 00:47:32 | INFO     | app.alerts.email_service:run_alert_check:253 — Alert check complete — 11 alert(s) fired across 5 domains
+2026-05-28 00:47:32 | WARNING  | app.alerts.scheduler:alert_scheduler_loop:31 — Alert scheduler: 11 alert(s) fired
+2026-05-28 00:48:11 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:48:28 | INFO     | app.api.chat:chat_completions:110 — Incoming headers: Headers({'host': 'host.docker.internal:8000', 'content-type': 'application/json', 'authorization': 'Bearer sk-1234', 'accept': '*/*', 'accept-encoding': 'gzip, deflate, br', 'user-agent': 'Python/3.11 aiohttp/3.13.5', 'content-length': '388'})
+2026-05-28 00:48:28 | INFO     | app.api.chat:chat_completions:114 — Raw incoming body: {'stream': True, 'model': 'healthcare-bot', 'messages': [{'role': 'system', 'content': 'SECURITY_CONTEXT:{"context": {"user_id": "41c2d7a2-96d1-44cf-a559-1dde5ca3136b", "email": "guest@localhost", "openwebui_role": "user", "timestamp": 1779909508}, "signature": "043b26de996b61406a75b8c187cfac3cdd400f4016e208c993f18541d44ad8b9"}'}, {'role': 'user', 'content': 'hi'}]}
+2026-05-28 00:48:28 | WARNING  | app.core.security:verify_and_create_context:56 — No metadata found in request. Denying access.
+2026-05-28 00:48:41 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-28 00:48:41 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:48:45 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:48:45 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:48:49 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:48:49 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:48:54 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:48:54 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:48:58 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 11 HIPAA violations recorded this week
+2026-05-28 00:48:58 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_001 | Critical | ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:49:02 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 269 drug batches expiring within 30 days — ₹1770691340.21 at risk
+2026-05-28 00:49:03 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_002 | High | ALERT: 126 drug items below reorder threshold
+2026-05-28 00:49:07 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 126 drug items below reorder threshold
+2026-05-28 00:49:07 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PHAR_003 | Critical | URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:49:11 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['pharmacy-manager@hospital.local', 'supply-chain@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 242 expired drug batches still in active inventory
+2026-05-28 00:49:11 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_001 | Critical | ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:49:15 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 2 Critical SLA breach(es) today — patient escalation required
+2026-05-28 00:49:16 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | PAT_002 | High | ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:49:20 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['patient-experience@hospital.local', 'operations-manager@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 92 unresolved patient complaints in queue
+2026-05-28 00:49:24 | INFO     | app.alerts.scheduler:alert_scheduler_loop:18 — Alert scheduler started — checking every 60 minutes
+2026-05-28 00:49:35 | INFO     | app.api.chat:chat_completions:110 — Incoming headers: Headers({'host': 'host.docker.internal:8000', 'content-type': 'application/json', 'authorization': 'Bearer sk-1234', 'accept': '*/*', 'accept-encoding': 'gzip, deflate, br', 'user-agent': 'Python/3.11 aiohttp/3.13.5', 'content-length': '388'})
+2026-05-28 00:49:35 | INFO     | app.api.chat:chat_completions:114 — Raw incoming body: {'stream': True, 'model': 'healthcare-bot', 'messages': [{'role': 'system', 'content': 'SECURITY_CONTEXT:{"context": {"user_id": "41c2d7a2-96d1-44cf-a559-1dde5ca3136b", "email": "guest@localhost", "openwebui_role": "user", "timestamp": 1779909575}, "signature": "073b747dda20e9dcd174b59dc1b930f0323f2d5cf5e678fa518d4ab087dab187"}'}, {'role': 'user', 'content': 'hi'}]}
+2026-05-28 00:49:35 | INFO     | app.api.chat:chat_completions:204 — Processing query: 'hi' by user 41c2d7a2-96d1-44cf-a559-1dde5ca3136b (guest)
+2026-05-28 00:49:52 | INFO     | app.agents.planner:planner_node:55 — Planner → intent='general' confidence=1.00
+2026-05-28 00:49:54 | INFO     | app.alerts.scheduler:alert_scheduler_loop:28 — Running scheduled alert check...
+2026-05-28 00:49:54 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_001 | Critical | ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:49:58 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: Billing rejection rate exceeded 21.1% in last 24h
+2026-05-28 00:49:58 | INFO     | app.agents.summarizer:summarizer_node:522 — Summarizer produced 62 char response.
+2026-05-28 00:49:58 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | BILL_002 | High | ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:50:02 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['billing-manager@hospital.local', 'cfo@hospital.local', 'eshaanmisra12@gmail.com']: ALERT: 439 new coding errors detected in last 24h
+2026-05-28 00:50:02 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_001 | Critical | URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:50:07 | INFO     | app.alerts.email_service:_send_email:133 — Alert email sent to ['compliance-officer@hospital.local', 'cco@hospital.local', 'eshaanmisra12@gmail.com']: URGENT: 18 Critical compliance violation(s) unresolved
+2026-05-28 00:50:07 | INFO     | app.api.chat:chat_completions:110 — Incoming headers: Headers({'host': 'host.docker.internal:8000', 'content-type': 'application/json', 'authorization': 'Bearer sk-1234', 'accept': '*/*', 'accept-encoding': 'gzip, deflate, br', 'user-agent': 'Python/3.11 aiohttp/3.13.5', 'content-length': '1161'})
+2026-05-28 00:50:07 | INFO     | app.api.chat:chat_completions:114 — Raw incoming body: {'model': 'healthcare-bot', 'messages': [{'role': 'user', 'content': '### Task:\nSuggest 3-5 relevant follow-up questions or prompts that the user might naturally ask next in this conversation as a **user**, based on the chat history, to help continue or deepen the discussion.\n### Guidelines:\n- Write all follow-up questions from the user’s point of view, directed to the assistant.\n- Make questions concise, clear, and directly related to the discussed topic(s).\n- Only suggest follow-ups that make sense given the chat content and do not repeat what was already covered.\n- If the conversation is very short or not specific, suggest more general (but relevant) follow-ups the user might ask.\n- Use the conversation\'s primary language; default to English if multilingual.\n- Response must be a JSON object with a "follow_ups" key containing an array of strings, no extra text or formatting.\n### Output:\nJSON format: { "follow_ups": ["Question 1?", "Question 2?", "Question 3?"] }\n### Chat History:\n<chat_history>\nUSER: hi\nASSISTANT: Hello! It\'s nice to chat with you. How can I assist you today?\n</chat_history>'}], 'stream': False}
+2026-05-28 00:50:07 | INFO     | app.api.chat:chat_completions:126 — Handled metadata prompt without graph execution.
+2026-05-28 00:50:07 | WARNING  | app.alerts.email_service:_evaluate_domain_rules:184 — Alert FIRED | COMP_002 | High | ALERT: 11 HIPAA violations recorded this week

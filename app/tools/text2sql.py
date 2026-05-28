@@ -20,6 +20,8 @@ from app.config import settings
 from app.utils.logger import logger
 from app.db.introspection import build_schema_metadata
 from app.tools.sql_validator import validate_sql_against_schema
+from app.core.security import SecurityContext
+from app.core.rbac import RBACManager, Role
 
 _SYSTEM_PROMPT_TEMPLATE = """\
 You are a SQL query generator for a healthcare SQLite database.
@@ -60,11 +62,25 @@ async def safe_execute_query(db: AsyncSession, sql_query: str, params: list | di
         logger.error(f"Execution Error: {e}")
         raise e
 
-async def run_text2sql(question: str, db: AsyncSession) -> list[dict[str, Any]]:
+async def run_text2sql(question: str, db: AsyncSession, security_context: SecurityContext = None, domain: str = "general") -> list[dict[str, Any]]:
     """
     Convert *question* to a parameterised SQL query using the LLM,
     validate it, auto-repair if needed, execute it, and return results.
+    Includes Independent Tool-Level Authorization.
     """
+    if not security_context:
+        logger.error("Text2SQL Tool blocked: Missing SecurityContext.")
+        raise PermissionError("Independent Tool Authorization Failed: Missing SecurityContext.")
+        
+    try:
+        user_role = Role(security_context.enterprise_role)
+    except ValueError:
+        user_role = Role.GUEST
+        
+    if domain != "general" and not RBACManager.can_access_domain(user_role, domain):
+        logger.critical(f"Text2SQL Tool Authorization Violation! Role {user_role.value} attempted to query {domain}.")
+        raise PermissionError(f"Independent Tool Authorization Failed: Role {user_role.value} cannot query {domain}.")
+
     schema_context = build_schema_metadata()
     system_prompt = _SYSTEM_PROMPT_TEMPLATE.format(schema=schema_context)
 

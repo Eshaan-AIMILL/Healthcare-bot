@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
-        extra="ignore",          # ← silently ignore any unknown env vars
+        extra="ignore",
     )
 
     # ── LLM ──────────────────────────────────────────────────────────────────
@@ -44,5 +44,7 @@ class Settings(BaseSettings):
     alert_emails_enabled:         bool = False
     alert_check_interval_minutes: int  = 60
 
+    # ── Open WebUI / Security ──────────────────────────────────────────────────
+    openwebui_secret_key: str = "super-secret-enterprise-key-change-in-prod"
 
 settings = Settings()

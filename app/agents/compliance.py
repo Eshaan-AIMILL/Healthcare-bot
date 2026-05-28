@@ -16,7 +16,7 @@ def _build_llm() -> ChatOllama:
 
 async def compliance_node(state: AgentState) -> AgentState:
     async with AsyncSessionLocal() as db:
-        sql_rows = await run_text2sql(state.query, db)
+        sql_rows = await run_text2sql(state.query, db, security_context=state.security_context, domain="compliance")
 
     if sql_rows and {"finding_id", "severity", "regulation_body"}.issubset(sql_rows[0]):
         state.sql_rows = sql_rows

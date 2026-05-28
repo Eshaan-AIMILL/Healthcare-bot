@@ -22,7 +22,7 @@ def _build_llm() -> ChatOllama:
 
 async def billing_node(state: AgentState) -> AgentState:
     async with AsyncSessionLocal() as db:
-        sql_rows = await run_text2sql(state.query, db)
+        sql_rows = await run_text2sql(state.query, db, security_context=state.security_context, domain="billing")
 
     if sql_rows and "overall_rejection_rate_pct" in sql_rows[0]:
         state.sql_rows = sql_rows

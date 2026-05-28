@@ -48,7 +48,7 @@ app.include_router(alerts_router)
 # Serve dashboard as static site at /dashboard
 dashboard_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "dashboard")
 if os.path.exists(dashboard_path):
-    # Root route → role selection + chat UI
+
     chat_html_path = os.path.join(dashboard_path, "chat.html")
 
     @app.get("/", include_in_schema=False)
