@@ -25,12 +25,38 @@ async def test_models_endpoint():
 
 @pytest.mark.asyncio
 async def test_chat_completions_returns_response():
+    import hmac
+    import hashlib
+    import json
+    import time
+    from app.config import settings
+    
+    context_data = {
+        "user_id": "test_admin",
+        "email": "admin@localhost",
+        "openwebui_role": "admin",
+        "timestamp": int(time.time())
+    }
+    payload_str = json.dumps(context_data, separators=(',', ':'), sort_keys=True)
+    signature = hmac.new(
+        settings.openwebui_secret_key.encode("utf-8"),
+        payload_str.encode("utf-8"),
+        hashlib.sha256
+    ).hexdigest()
+    
+    sec_context = {
+        "context": context_data,
+        "signature": signature
+    }
+    system_msg = {"role": "system", "content": f"SECURITY_CONTEXT:{json.dumps(sec_context)}"}
+
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test", timeout=120.0) as client:
         response = await client.post(
             "/v1/chat/completions",
             json={
                 "model": "healthcare-bot",
                 "messages": [
+                    system_msg,
                     {"role": "user", "content": "Show me any billing claims with coding errors."}
                 ],
             },
@@ -58,7 +84,18 @@ ROUTING_CASES = [
 @pytest.mark.asyncio
 @pytest.mark.parametrize("query,expected_intent", ROUTING_CASES)
 async def test_planner_routing(query: str, expected_intent: str):
-    state = AgentState(query=query)
+    import time
+    from app.core.security import SecurityContext
+    
+    context = SecurityContext(
+        user_id="test_admin",
+        email="admin@localhost",
+        openwebui_role="admin",
+        enterprise_role="admin",
+        timestamp=int(time.time()),
+    )
+    
+    state = AgentState(query=query, security_context=context, role="admin")
     result = await planner_node(state)
     assert result.intent == expected_intent, (
         f"Query '{query}' — expected intent='{expected_intent}', got='{result.intent}'"

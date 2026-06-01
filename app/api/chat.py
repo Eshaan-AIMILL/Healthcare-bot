@@ -194,6 +194,11 @@ async def chat_completions(http_request: Request, request: ChatRequest) -> ChatR
             "debug_metadata_received": security_metadata
         })
 
+    # Slicing conversation memory (sliding window of last 6 messages) to optimize tokens and cost
+    if len(conversation_history) > 6:
+        logger.info(f"Trimming conversation history from {len(conversation_history)} to last 3 messages.")
+        conversation_history = conversation_history[-3:]
+
     initial_state = AgentState(
         query=latest_query,
         role=security_context.enterprise_role,

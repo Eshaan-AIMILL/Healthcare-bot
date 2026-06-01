@@ -221,7 +221,7 @@
   },
 
   "text2sql_rules": [
-    "Only generate SELECT statements — never INSERT, UPDATE, DELETE, DROP, or any DDL",
+    "You may generate SELECT, INSERT, UPDATE, or DELETE statements — never DROP, ALTER, CREATE, or other DDL",
     "Always use parameterised placeholders (?) for any user-supplied filter values",
     "Default row limit is 50 — use LIMIT 50 unless the question asks for aggregates",
     "For date arithmetic use SQLite functions: DATE('now'), DATE('now', '-N days'), julianday()",

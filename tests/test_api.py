@@ -3,6 +3,34 @@ from httpx import AsyncClient, ASGITransport
 from app.main import app
 
 
+def sign_messages(messages_list):
+    import hmac
+    import hashlib
+    import json
+    import time
+    from app.config import settings
+    
+    context_data = {
+        "user_id": "test_admin",
+        "email": "admin@localhost",
+        "openwebui_role": "admin",
+        "timestamp": int(time.time())
+    }
+    payload_str = json.dumps(context_data, separators=(',', ':'), sort_keys=True)
+    signature = hmac.new(
+        settings.openwebui_secret_key.encode("utf-8"),
+        payload_str.encode("utf-8"),
+        hashlib.sha256
+    ).hexdigest()
+    
+    sec_context = {
+        "context": context_data,
+        "signature": signature
+    }
+    system_msg = {"role": "system", "content": f"SECURITY_CONTEXT:{json.dumps(sec_context)}"}
+    return [system_msg] + messages_list
+
+
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
 @pytest.fixture
@@ -49,9 +77,9 @@ async def test_chat_returns_assistant_message(client):
         "/v1/chat/completions",
         json={
             "model": "healthcare-bot",
-            "messages": [
+            "messages": sign_messages([
                 {"role": "user", "content": "Show me any rejected billing claims."}
-            ],
+            ]),
         },
     )
     assert r.status_code == 200
@@ -99,11 +127,11 @@ async def test_multiturn_conversation(client):
         "/v1/chat/completions",
         json={
             "model": "healthcare-bot",
-            "messages": [
+            "messages": sign_messages([
                 {"role": "user", "content": "List drugs expiring within 30 days."},
                 {"role": "assistant", "content": "Here are the drugs expiring soon..."},
                 {"role": "user", "content": "Which of those need immediate reorder?"},
-            ],
+            ]),
         },
     )
     assert r.status_code == 200
@@ -145,7 +173,7 @@ async def test_domain_queries_return_non_empty_response(client, domain, query):
         "/v1/chat/completions",
         json={
             "model": "healthcare-bot",
-            "messages": [{"role": "user", "content": query}],
+            "messages": sign_messages([{"role": "user", "content": query}]),
         },
     )
     assert r.status_code == 200, f"[{domain}] Expected 200, got {r.status_code}"
@@ -172,7 +200,7 @@ async def test_executive_queries(client, query):
         "/v1/chat/completions",
         json={
             "model": "healthcare-bot",
-            "messages": [{"role": "user", "content": query}],
+            "messages": sign_messages([{"role": "user", "content": query}]),
         },
     )
     assert r.status_code == 200
@@ -189,7 +217,7 @@ async def test_response_schema_has_all_required_fields(client):
         "/v1/chat/completions",
         json={
             "model": "healthcare-bot",
-            "messages": [{"role": "user", "content": "List billing claims under review."}],
+            "messages": sign_messages([{"role": "user", "content": "List billing claims under review."}]),
         },
     )
     body = r.json()

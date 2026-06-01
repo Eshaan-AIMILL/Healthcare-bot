@@ -15,8 +15,8 @@ class RBACManager:
     # Define accessible domains per role
     DOMAIN_ACCESS = {
         Role.ADMIN: ["billing", "compliance", "pharmacy", "patient", "dispatch"],
-        Role.RECEPTION: ["patient", "dispatch"], # Operational only
-        Role.GUEST: [] # No domain access, general FAQ only
+        Role.RECEPTION: ["billing", "patient", "dispatch"],
+        Role.GUEST: []  # No domain access, general FAQ only
     }
     
     @classmethod
@@ -30,7 +30,7 @@ class RBACManager:
         if role == Role.ADMIN:
             return "Role: Admin. Full access to analytics, compliance, and patient data. Exports allowed."
         elif role == Role.RECEPTION:
-            return "Role: Reception. Operational access only. Limited to appointments, check-ins, and basic patient status. NO compliance or billing analytics allowed."
+            return "Role: Reception. Operational access with billing visibility. Can access patient appointments, wait times, SLA complaints, dispatch, and billing claim data. NO compliance or pharmacy analytics allowed."
         elif role == Role.GUEST:
             return "Role: Guest. General hospital info and FAQs only. NO access to patient, billing, or internal data. CRITICAL: You MUST classify any guest query about hospital policies, wait times, appointment scheduling, or complaints as 'general'."
         return "Role: Unknown."

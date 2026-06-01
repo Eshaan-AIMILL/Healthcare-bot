@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     # ── LLM ──────────────────────────────────────────────────────────────────
     ollama_base_url: str = "http://localhost:11434"
     ollama_model:    str = "mistral-nemo"
+    ollama_text2sql_model: str = "qwen2.5:7b"
 
     # ── Database ──────────────────────────────────────────────────────────────
     database_url:       str = "sqlite+aiosqlite:///./data/healthcare.db"

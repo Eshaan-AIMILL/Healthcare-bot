@@ -153,8 +153,7 @@ TEST_PROMPTS = [
                "authorized", "Vehicle availability lookup"),
     TestPrompt("B6", "reception", "billing",
                "What is our overall claim rejection rate?",
-               "denied", "RBAC boundary — billing denied for reception",
-               expect_denial=True),
+               "authorized", "Reception now has billing visibility — should return claim data"),
     TestPrompt("B7", "reception", "compliance",
                "Show me all Critical HIPAA violations.",
                "denied", "RBAC boundary — compliance denied for reception",
@@ -211,7 +210,7 @@ TEST_PROMPTS = [
 ]
 
 # Quick mode: only the 9 most important prompts
-QUICK_IDS = {"A1", "A4", "A9", "B1", "B6", "B9", "C1", "C4", "C10"}
+QUICK_IDS = {"A1", "A4", "B1", "B6", "B9", "C1", "C4", "C10"}
 
 
 # ═══════════════════════════════════════════════════════════════════════════

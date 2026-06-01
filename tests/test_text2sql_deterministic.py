@@ -27,8 +27,19 @@ from app.tools.text2sql import run_text2sql
     ],
 )
 async def test_deterministic_text2sql_queries(query: str, expected_keys: set[str]):
+    import time
+    from app.core.security import SecurityContext
+    
+    context = SecurityContext(
+        user_id="test_admin",
+        email="admin@localhost",
+        openwebui_role="admin",
+        enterprise_role="admin",
+        timestamp=int(time.time()),
+    )
+    
     async with AsyncSessionLocal() as db:
-        rows = await run_text2sql(query, db)
+        rows = await run_text2sql(query, db, security_context=context)
 
     assert rows, f"Expected rows for query: {query}"
     assert expected_keys.issubset(rows[0].keys())

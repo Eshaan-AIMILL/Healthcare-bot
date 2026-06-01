@@ -493,7 +493,7 @@ async def run_dispatch_assessment(
     # 5. Alternative routes for trade-off scoring
     alt_routes_result = await db.execute(text("""
         SELECT route_id, origin, destination, distance_km,
-               estimated_duration_minutes, route_type, estimated_cost
+               estimated_duration_minutes, route_type
         FROM routes
         WHERE origin = :origin AND destination = :destination
         ORDER BY estimated_duration_minutes ASC

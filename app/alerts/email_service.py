@@ -22,12 +22,12 @@ from app.config import settings
 from app.db.session import AsyncSessionLocal
 from app.utils.logger import logger
 
-_SCHEMAS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "schemas")
+_PROMPT_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "prompt")
 _SENT_LOG: dict[str, datetime] = {}   # rule_id → last sent time (in-memory cooldown)
 
 
 def _load_alert_rules() -> dict:
-    path = os.path.join(_SCHEMAS_DIR, "alert_rules.json")
+    path = os.path.join(_PROMPT_DIR, "alert_rules.json")
     with open(path, encoding="utf-8") as f:
         return json.load(f)
 
