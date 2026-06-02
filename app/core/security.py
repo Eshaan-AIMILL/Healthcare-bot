@@ -74,7 +74,7 @@ def verify_and_create_context(metadata: Dict[str, Any]) -> Optional[SecurityCont
     
     # Generate expected signature
     expected_signature = hmac.new(
-        settings.openwebui_secret_key.encode("utf-8"),
+        settings.get_secret_key().encode("utf-8"),
         payload_str.encode("utf-8"),
         hashlib.sha256
     ).hexdigest()

@@ -161,10 +161,11 @@ class TestSLAPrediction:
         assert r["confidence"] in ("Low", "Medium")
 
     def test_predicted_arrival_is_future(self):
-        r = self._make_prediction()
+        now = datetime.now().replace(hour=9, minute=0, second=0, microsecond=0)
+        r = self._make_prediction(dispatch_hour=9)
         if r["predicted_arrival"]:
             arrival = datetime.fromisoformat(r["predicted_arrival"])
-            assert arrival > datetime.now() - timedelta(seconds=5)
+            assert arrival > now - timedelta(seconds=5)
 
 
 

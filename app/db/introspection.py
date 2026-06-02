@@ -303,15 +303,28 @@ def build_schema_metadata(
             lines.append(f"  JOIN HINT: {_JOIN_HINTS[table_name]}")
 
     # ── Hard rules appended directly in the schema block ───────────────────
+    from app.config import settings
+    is_sqlite = settings.is_sqlite
+
     lines += [
         "",
         "## MANDATORY QUERY RULES",
         "  1. SELECT only. NEVER INSERT / UPDATE / DELETE / DROP.",
         "  2. Use named SQLAlchemy placeholders (:param_name) for every user value.",
-        "  3. Date arithmetic: DATE('now', '-N days') or DATE(:current_date, '+N days').",
-        "  4. Do NOT invent columns. If a column is not listed above, it does not exist.",
-        "  5. Boolean columns store 0/1 integers, not TRUE/FALSE keywords.",
     ]
+
+    if is_sqlite:
+        lines += [
+            "  3. Date arithmetic: DATE('now', '-N days') or DATE(:current_date, '+N days').",
+            "  4. Do NOT invent columns. If a column is not listed above, it does not exist.",
+            "  5. Boolean columns store 0/1 integers, not TRUE/FALSE keywords.",
+        ]
+    else:
+        lines += [
+            "  3. Date arithmetic: CURRENT_DATE - INTERVAL 'N days' or :current_date::date + INTERVAL 'N days'.",
+            "  4. Do NOT invent columns. If a column is not listed above, it does not exist.",
+            "  5. Boolean columns use TRUE/FALSE keywords (PostgreSQL).",
+        ]
 
     return "\n".join(lines)
 

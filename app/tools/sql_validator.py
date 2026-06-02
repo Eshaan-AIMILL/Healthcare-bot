@@ -2,21 +2,28 @@ import sqlglot
 from sqlglot import exp
 from sqlglot.errors import ParseError
 from app.db.models import Base
+from app.config import settings
 from sqlalchemy import MetaData
 import logging
 
 logger = logging.getLogger(__name__)
 
+# ── Dialect detection ────────────────────────────────────────────────────────
+# Use PostgreSQL dialect when the database is PostgreSQL, SQLite otherwise.
+_SQL_DIALECT = "sqlite" if settings.is_sqlite else "postgres"
+
+
 def validate_sql_against_schema(sql_query: str) -> str | None:
     """
     Validates a SQL query against the database schema using sqlglot.
     Returns an error string if validation fails, otherwise returns None.
+    Supports both SQLite and PostgreSQL dialects based on configuration.
     """
     metadata: MetaData = Base.metadata
     
     # 1. Parse the SQL query
     try:
-        parsed = sqlglot.parse_one(sql_query, dialect="sqlite")
+        parsed = sqlglot.parse_one(sql_query, dialect=_SQL_DIALECT)
     except ParseError as e:
         return f"SQL syntax error: {e}"
         
@@ -107,10 +114,11 @@ def validate_sql_against_schema(sql_query: str) -> str | None:
         if isinstance(node, forbidden_classes):
             return f"DDL operation '{type(node).__name__}' is strictly forbidden."
             
-    # SQLite does not fully support RIGHT and FULL OUTER joins in older versions.
-    # We catch this here so the LLM auto-repair logic can switch to LEFT joins.
-    for node in parsed.find_all(exp.Join):
-        if node.side in ("FULL", "RIGHT"):
-            return f"Unsupported syntax: '{node.side} JOIN' is not supported in this version of SQLite. Please restructure your query using 'LEFT JOIN' instead."
+    # SQLite does not fully support RIGHT and FULL OUTER joins.
+    # PostgreSQL supports them natively, so only enforce for SQLite.
+    if settings.is_sqlite:
+        for node in parsed.find_all(exp.Join):
+            if node.side in ("FULL", "RIGHT"):
+                return f"Unsupported syntax: '{node.side} JOIN' is not supported in this version of SQLite. Please restructure your query using 'LEFT JOIN' instead."
         
     return None # No errors found

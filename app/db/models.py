@@ -252,3 +252,21 @@ class AuditLog(Base):
     target_resource = Column(String(100))
     query_text = Column(Text)
     status = Column(String(20)) # Success | Blocked | Error
+
+
+# ── Alert History (Persistent Alert Storage) ──────────────────────────────────
+
+class AlertHistory(Base):
+    __tablename__ = "alert_history"
+
+    alert_id = Column(Integer, primary_key=True, autoincrement=True)
+    rule_id = Column(String(60), nullable=False, index=True)
+    domain = Column(String(30), nullable=False)
+    severity = Column(String(20), nullable=False)
+    subject = Column(String(255), nullable=False)
+    body = Column(Text)
+    trigger_values = Column(Text)  # JSON string of the trigger row values
+    email_sent = Column(Boolean, default=False)
+    dry_run = Column(Boolean, default=False)
+    fired_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
+

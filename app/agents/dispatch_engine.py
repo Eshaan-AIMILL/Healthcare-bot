@@ -88,7 +88,9 @@ def get_traffic_factor(route_type: str, dispatch_hour: int) -> float:
     Return the traffic multiplier for a given route type and hour of day.
     Uses the closest lower-bound hour in the schedule.
     """
-    schedule = TRAFFIC_SCHEDULE.get(route_type, TRAFFIC_SCHEDULE["Urban"])
+    if route_type not in TRAFFIC_SCHEDULE:
+        return 1.0
+    schedule = TRAFFIC_SCHEDULE[route_type]
     applicable_hours = sorted(h for h in schedule if h <= dispatch_hour)
     if not applicable_hours:
         return 1.0

@@ -5,6 +5,10 @@ database, and sends SMTP email alerts when conditions are met.
 
 Runs as a background scheduler (every 60 min) or can be triggered manually.
 All SQL queries come from alert_rules.json — none are hardcoded here.
+
+Alert history is persisted to the `alert_history` database table for cooldown
+tracking and audit purposes. The in-memory _SENT_LOG is kept as a fast-path
+cache but the database is the source of truth.
 """
 import json
 import os
@@ -16,14 +20,18 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from typing import Any
 
-from sqlalchemy import text
+from sqlalchemy import text, select, desc
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.db.session import AsyncSessionLocal
+from app.db.models import AlertHistory
 from app.utils.logger import logger
 
 _PROMPT_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "prompt")
-_SENT_LOG: dict[str, datetime] = {}   # rule_id → last sent time (in-memory cooldown)
+
+# In-memory cache for fast cooldown lookups (populated from DB on first check)
+_SENT_LOG: dict[str, datetime] = {}
 
 
 def _load_alert_rules() -> dict:
@@ -76,11 +84,58 @@ def _evaluate_condition(condition: str, row: dict[str, Any]) -> bool:
     return ops.get(op, False)
 
 
-def _is_on_cooldown(rule_id: str, cooldown_hours: int) -> bool:
+async def _is_on_cooldown(rule_id: str, cooldown_hours: int, db: AsyncSession) -> bool:
+    """
+    Check cooldown against the persistent AlertHistory table.
+    Falls back to in-memory cache for speed.
+    """
+    # Fast path: check in-memory cache first
     last_sent = _SENT_LOG.get(rule_id)
-    if last_sent is None:
-        return False
-    return datetime.now() - last_sent < timedelta(hours=cooldown_hours)
+    if last_sent and datetime.now() - last_sent < timedelta(hours=cooldown_hours):
+        return True
+
+    # Slow path: check database
+    cutoff = datetime.utcnow() - timedelta(hours=cooldown_hours)
+    result = await db.execute(
+        select(AlertHistory.fired_at)
+        .where(AlertHistory.rule_id == rule_id)
+        .where(AlertHistory.fired_at > cutoff)
+        .order_by(desc(AlertHistory.fired_at))
+        .limit(1)
+    )
+    row = result.scalar_one_or_none()
+    if row:
+        _SENT_LOG[rule_id] = row  # Update cache
+        return True
+
+    return False
+
+
+async def _record_alert(
+    db: AsyncSession,
+    rule_id: str,
+    domain: str,
+    severity: str,
+    subject: str,
+    body: str,
+    values: dict,
+    email_sent: bool,
+    dry_run: bool,
+) -> None:
+    """Persist a fired alert to the database."""
+    alert = AlertHistory(
+        rule_id=rule_id,
+        domain=domain,
+        severity=severity,
+        subject=subject,
+        body=body,
+        trigger_values=json.dumps(values, default=str),
+        email_sent=email_sent,
+        dry_run=dry_run,
+    )
+    db.add(alert)
+    await db.commit()
+    _SENT_LOG[rule_id] = datetime.now()
 
 
 def _send_email(
@@ -164,8 +219,8 @@ async def _evaluate_domain_rules(
                 logger.warning(f"Alert rule {rule_id} has non-SELECT SQL — skipped")
                 continue
 
-            # ── Cooldown check ────────────────────────────────────────────────
-            if _is_on_cooldown(rule_id, cooldown_hours):
+            # ── Cooldown check (DB-backed) ────────────────────────────────────
+            if await _is_on_cooldown(rule_id, cooldown_hours, db):
                 logger.debug(f"Alert {rule_id} on cooldown — skipping")
                 continue
 
@@ -184,17 +239,10 @@ async def _evaluate_domain_rules(
                     logger.warning(
                         f"Alert FIRED | {rule_id} | {rule['severity']} | {subject}"
                     )
-                    fired.append({
-                        "rule_id":  rule_id,
-                        "domain":   domain,
-                        "severity": rule["severity"],
-                        "subject":  subject,
-                        "body":     body,
-                        "values":   row_dict,
-                    })
 
+                    email_sent = False
                     if not dry_run:
-                        sent = _send_email(
+                        email_sent = _send_email(
                             smtp_host=smtp_settings["host"],
                             smtp_port=smtp_settings["port"],
                             smtp_user=smtp_settings.get("user", ""),
@@ -205,11 +253,31 @@ async def _evaluate_domain_rules(
                             body=body,
                             use_tls=smtp_settings.get("use_tls", True),
                         )
-                        if sent:
-                            _SENT_LOG[rule_id] = datetime.now()
                     else:
                         logger.info(f"[DRY RUN] Would send: {subject} → {recipients}")
-                        _SENT_LOG[rule_id] = datetime.now()
+
+                    # Persist to database
+                    await _record_alert(
+                        db=db,
+                        rule_id=rule_id,
+                        domain=domain,
+                        severity=rule["severity"],
+                        subject=subject,
+                        body=body,
+                        values=row_dict,
+                        email_sent=email_sent,
+                        dry_run=dry_run,
+                    )
+
+                    fired.append({
+                        "rule_id":  rule_id,
+                        "domain":   domain,
+                        "severity": rule["severity"],
+                        "subject":  subject,
+                        "body":     body,
+                        "values":   row_dict,
+                        "email_sent": email_sent,
+                    })
 
             except Exception as exc:
                 logger.error(f"Alert rule {rule_id} evaluation failed: {exc}")

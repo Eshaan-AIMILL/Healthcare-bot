@@ -1,0 +1,193 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL Database ──────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: healthcare
+      POSTGRES_PASSWORD: healthcare_pass
+      POSTGRES_DB: healthcare
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U healthcare"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── ChromaDB Vector Store ────────────────────────────────────
+  chromadb:
+    image: chromadb/chroma:latest
+    volumes:
+      - chromadata:/chroma/chroma
+    ports:
+      - "8001:8000"
+    environment:
+      ANONYMIZED_TELEMETRY: "False"
+    restart: unless-stopped
+
+  # ── Gateway / Planner Service (API Gateway) ──────────────────
+  planner-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    command: ["gunicorn", "app.services.planner.main:app", "-c", "gunicorn.conf.py"]
+    depends_on:
+      db:
+        condition: service_healthy
+      chromadb:
+        condition: service_started
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://healthcare:healthcare_pass@db:5432/healthcare"
+      BILLING_SERVICE_URL: "http://billing-service:8002"
+      COMPLIANCE_SERVICE_URL: "http://compliance-service:8003"
+      PHARMACY_SERVICE_URL: "http://pharmacy-service:8004"
+      PATIENT_SERVICE_URL: "http://patient-service:8005"
+      DISPATCH_SERVICE_URL: "http://dispatch-service:8006"
+      CACHE_SERVICE_URL: "http://cache-service:8007"
+      REDIS_URL: "redis://redis:6379/0"
+    volumes:
+      - ./data/chroma:/app/data/chroma
+      - ./data:/app/data
+    restart: unless-stopped
+
+  # ── Billing Service ──────────────────────────────────────────
+  billing-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8002"
+    command: ["uvicorn", "app.services.billing.main:app", "--host", "0.0.0.0", "--port", "8002"]
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://healthcare:healthcare_pass@db:5432/healthcare"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  # ── Compliance Service ───────────────────────────────────────
+  compliance-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8003:8003"
+    command: ["uvicorn", "app.services.compliance.main:app", "--host", "0.0.0.0", "--port", "8003"]
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://healthcare:healthcare_pass@db:5432/healthcare"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  # ── Pharmacy Service ─────────────────────────────────────────
+  pharmacy-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8004:8004"
+    command: ["uvicorn", "app.services.pharmacy.main:app", "--host", "0.0.0.0", "--port", "8004"]
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://healthcare:healthcare_pass@db:5432/healthcare"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  # ── Patient Service ──────────────────────────────────────────
+  patient-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8005:8005"
+    command: ["uvicorn", "app.services.patient.main:app", "--host", "0.0.0.0", "--port", "8005"]
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://healthcare:healthcare_pass@db:5432/healthcare"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  # ── Dispatch Service ─────────────────────────────────────────
+  dispatch-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8006:8006"
+    command: ["uvicorn", "app.services.dispatch.main:app", "--host", "0.0.0.0", "--port", "8006"]
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://healthcare:healthcare_pass@db:5432/healthcare"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  # ── Redis Container ──────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # ── Cache Service ────────────────────────────────────────────
+  cache-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8007:8007"
+    command: ["uvicorn", "app.services.cache.main:app", "--host", "0.0.0.0", "--port", "8007"]
+    depends_on:
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: "redis://redis:6379/0"
+    restart: unless-stopped
+
+
+volumes:
+  pgdata:
+  chromadata:
+  redisdata:

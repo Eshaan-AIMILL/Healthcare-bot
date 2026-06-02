@@ -10,7 +10,10 @@ from collections.abc import Mapping
 from typing import Any
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
+from app.config import settings
 from app.core.graph import compiled_graph
 from app.core.state import AgentState
 from app.core.security import verify_and_create_context
@@ -22,7 +25,6 @@ router = APIRouter()
 class ChatMessage(BaseModel):
     role: str
     content: str
-
 
 class ChatRequest(BaseModel):
     model: str = "healthcare-bot"
@@ -103,17 +105,21 @@ async def list_models():
     }
 
 
+limiter = Limiter(key_func=get_remote_address)
+
+
 @router.post("/v1/chat/completions", response_model=ChatResponse)
-async def chat_completions(http_request: Request, request: ChatRequest) -> ChatResponse:
+@limiter.limit(settings.rate_limit_chat)
+async def chat_completions(request: Request, chat_request: ChatRequest) -> ChatResponse:
     
     # Log incoming headers for debugging Open WebUI auth passing
-    logger.info(f"Incoming headers: {http_request.headers}")
+    logger.info(f"Incoming headers: {request.headers}")
     
     # Log raw body to see what Open WebUI actually sends!
-    raw_body = await http_request.json()
+    raw_body = await request.json()
     logger.info(f"Raw incoming body: {raw_body}")
     
-    user_messages = [m for m in request.messages if m.role == "user"]
+    user_messages = [m for m in chat_request.messages if m.role == "user"]
     if not user_messages:
         raise HTTPException(status_code=400, detail="No user message found in request.")
 
@@ -127,7 +133,7 @@ async def chat_completions(http_request: Request, request: ChatRequest) -> ChatR
         return ChatResponse(
             id=f"chatcmpl-{uuid.uuid4().hex[:12]}",
             created=int(time.time()),
-            model=request.model,
+            model=chat_request.model,
             choices=[
                 ChatChoice(
                     index=0,
@@ -136,10 +142,10 @@ async def chat_completions(http_request: Request, request: ChatRequest) -> ChatR
             ],
         )
 
-    conversation_history = [{"role": m.role, "content": m.content} for m in request.messages]
+    conversation_history = [{"role": m.role, "content": m.content} for m in chat_request.messages]
 
     # Extract security context from metadata or from a special injected payload
-    security_metadata = request.metadata
+    security_metadata = chat_request.metadata
     
     # 1. Check for injected system message from Open WebUI Filter (Method A)
     for i, msg in enumerate(conversation_history):
@@ -221,7 +227,7 @@ async def chat_completions(http_request: Request, request: ChatRequest) -> ChatR
     return ChatResponse(
         id=f"chatcmpl-{uuid.uuid4().hex[:12]}",
         created=int(time.time()),
-        model=request.model,
+        model=chat_request.model,
         choices=[
             ChatChoice(
                 index=0,

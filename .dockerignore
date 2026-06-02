@@ -1,0 +1,22 @@
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+.env
+.env.local
+data/
+reports/
+*.db
+*.log
+.pytest_cache
+venv/
+.venv/
+node_modules/
+*.xlsx
+*.jpg
+*.egg-info
+README.md
+Book1.xlsx
+Flow Diagram.jpg
+STRESS TEST REPORTS.xlsx
